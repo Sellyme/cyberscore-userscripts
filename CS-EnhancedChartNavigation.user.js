@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         CS-EnhancedChartNavigation
-// @version      0.3
+// @version      1.0
 // @description  Extends navigation between charts beyond just "Next"/"Previous"
 // @author       Sellyme
 // @namespace    https://github.com/Sellyme/cyberscore-userscripts/
-// @downloadURL  https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedChartNavigation.user.js
 // @homepageURL  https://github.com/Sellyme/cyberscore-userscripts/
+// @downloadURL  https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedChartNavigation.user.js
 // @updateURL    https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedChartNavigation.user.js
 // ==/UserScript==
 (function(){
