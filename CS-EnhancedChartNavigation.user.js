@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         CS-EnhancedChartNavigation
-// @version      0.1
+// @version      0.2
 // @description  Extends navigation between charts beyond just "Next"/"Previous"
 // @author       Sellyme
 // @include      https://cyberscore.me.uk/chart/*
+// @updateURL    https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedChartNavigation.user.js
 // ==/UserScript==
 (function(){
 	//get all the required variables
-    var navRow = document.getElementsByClassName('charts-show-navigation')[0].children[0];
+	var navRow = document.getElementsByClassName('charts-show-navigation')[0].children[0];
 	var URLComponents = window.location.href.split("/");
 	var currChart = parseInt(URLComponents[URLComponents.length - 1]);
 	var prevLink = navRow.children[0].href;
@@ -18,7 +19,7 @@
 	navRow.style.display = "block";
 	navRow.style.justifyContent = "";
 
-    //build the left-hand side of navigation
+	//build the left-hand side of navigation
 	var navPrev = document.createElement('div');
 	navPrev.style.display = "flex";
 	navPrev.style.justifyContent = "space-around"
