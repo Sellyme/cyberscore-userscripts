@@ -3,7 +3,9 @@
 // @version      0.3
 // @description  Extends navigation between charts beyond just "Next"/"Previous"
 // @author       Sellyme
-// @include      https://cyberscore.me.uk/chart/*
+// @namespace    https://github.com/Sellyme/cyberscore-userscripts/
+// @downloadURL  https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedChartNavigation.user.js
+// @homepageURL  https://github.com/Sellyme/cyberscore-userscripts/
 // @updateURL    https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedChartNavigation.user.js
 // ==/UserScript==
 (function(){
