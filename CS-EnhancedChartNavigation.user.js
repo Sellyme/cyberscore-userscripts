@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CS-EnhancedChartNavigation
-// @version      0.2
+// @version      0.3
 // @description  Extends navigation between charts beyond just "Next"/"Previous"
 // @author       Sellyme
 // @include      https://cyberscore.me.uk/chart/*
@@ -37,8 +37,13 @@
 	}
 	//and also append the "Prev" to the end
 	var prevNav = document.createElement('a');
-	prevNav.href = prevLink;
 	prevNav.innerText = "Prev";
+	if(prevLink == undefined) {
+		//if the link is undefined (outside of the selected group), overwrite it with a -1
+		prevNav.href = "/chart/" + (currChart - 1)
+	} else {
+		prevNav.href = prevLink;
+	}
 	navPrev.appendChild(prevNav) //don't @ me about these naming conventions
 
 	//build the right-hand side of navigation
@@ -50,8 +55,13 @@
 
 	//for this one we need to append the "Next" first
 	var nextNav = document.createElement('a');
-	nextNav.href = nextLink;
 	nextNav.innerText = "Next";
+	if(nextLink == undefined) {
+		//if the link is undefined (outside of the selected group), overwrite it with a +1
+		nextNav.href = "/chart/" + (currChart + 1)
+	} else {
+		nextNav.href = nextLink;
+	}
 	navNext.appendChild(nextNav);
 	//and then automatically create the next navigation options
 	var navsToCreate = [2, 3, 4, 5]; //adjust these if you'd like different nav options
