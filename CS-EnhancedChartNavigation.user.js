@@ -22,11 +22,11 @@
 	navRow.style.justifyContent = "";
 
 	//build the left-hand side of navigation
-	var navPrev = document.createElement('div');
-	navPrev.style.display = "flex";
-	navPrev.style.justifyContent = "space-around"
-	navPrev.style.width = "50%"
-	navPrev.style.float = "left";
+	var prevDiv = document.createElement('div');
+	prevDiv.style.display = "flex";
+	prevDiv.style.justifyContent = "space-around"
+	prevDiv.style.width = "50%"
+	prevDiv.style.float = "left";
 
 	//automatically create the desired previous navigation options
 	var navsToCreate = [-5, -4, -3, -2]; //adjust these if you'd like different nav options
@@ -35,7 +35,7 @@
 		var newNav = document.createElement('a');
 		newNav.innerText = navsToCreate[i];
 		newNav.href = "/chart/" + (currChart+offset)
-		navPrev.appendChild(newNav);
+		prevDiv.appendChild(newNav);
 	}
 	//and also append the "Prev" to the end
 	var prevNav = document.createElement('a');
@@ -46,14 +46,14 @@
 	} else {
 		prevNav.href = prevLink;
 	}
-	navPrev.appendChild(prevNav) //don't @ me about these naming conventions
+	prevDiv.appendChild(prevNav)
 
 	//build the right-hand side of navigation
-	var navNext = document.createElement('div');
-	navNext.style.display = "flex";
-	navNext.style.justifyContent = "space-around"
-	navNext.style.width = "50%"
-	navNext.style.float = "right";
+	var nextDiv = document.createElement('div');
+	nextDiv.style.display = "flex";
+	nextDiv.style.justifyContent = "space-around"
+	nextDiv.style.width = "50%"
+	nextDiv.style.float = "right";
 
 	//for this one we need to append the "Next" first
 	var nextNav = document.createElement('a');
@@ -64,7 +64,7 @@
 	} else {
 		nextNav.href = nextLink;
 	}
-	navNext.appendChild(nextNav);
+	nextDiv.appendChild(nextNav);
 	//and then automatically create the next navigation options
 	var navsToCreate = [2, 3, 4, 5]; //adjust these if you'd like different nav options
 	for(var i = 0; i < navsToCreate.length; i++) {
@@ -72,10 +72,10 @@
 		var newNav = document.createElement('a');
 		newNav.innerText = "+"+navsToCreate[i];
 		newNav.href = "/chart/" + (currChart+offset)
-		navNext.appendChild(newNav);
+		nextDiv.appendChild(newNav);
 	}
 
 	//and chuck them into the DOM
-	navRow.appendChild(navPrev);
-	navRow.appendChild(navNext);
+	navRow.appendChild(prevDiv);
+	navRow.appendChild(nextDiv);
 })();
