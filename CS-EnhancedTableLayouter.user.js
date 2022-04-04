@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CS-EnhancedTableLayouter
-// @version      0.3
+// @version      0.4
 // @description  Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author       Sellyme
 // @include      https://cyberscore.me.uk/game/1550
@@ -48,7 +48,9 @@
 
     let table = document.createElement("table");
     table.classList.add("gamelist");
+    table.style = "margin-bottom: 5px;";
     let tbody = document.createElement("tbody");
+    tbody.classList.add("standard", "all");
     table.appendChild(tbody);
     for(let i = 0; i < chartCount; i++){
         let row = document.createElement("tr");
@@ -95,7 +97,7 @@
                     small.appendChild(rank.children[k].cloneNode(true));
                 }
                 let newLink = link.getElementsByTagName("a")[0].cloneNode(true);
-                newLink.innerText = score.innerText.replace(/\n/g, "");
+                newLink.innerText = " " + score.innerText.trim().replace(/\n/g, "");
                 td.appendChild(newLink);
                 tbody.children[j].appendChild(td);
                 c++; //no, this is JavaScript
@@ -106,7 +108,15 @@
     let row = document.createElement("tr");
     row.classList.add("group");
     row.classList.add("standard");
-    row.appendChild(document.createElement("td"));
+    //add a collapse button
+    let collapseCell = document.createElement("td");
+    let collapseLink = document.createElement("a");
+    collapseLink.innerText = "Collapse";
+    collapseLink.href = "#";
+    collapseLink.onclick = function() {return toggleGroup(this)}; //part of CS's standard JS suite
+    collapseCell.appendChild(collapseLink);
+    row.appendChild(collapseCell);
+    //and then add the group names
     for(let i = groupStart; i < groupEnd; i++){
         let td = document.createElement("td");
         td.appendChild(document.createTextNode(groupNames[i-groupStart]));
@@ -115,5 +125,5 @@
     tbody.insertBefore(row, tbody.firstChild);
 
     let pageleft = document.getElementById("pageleft");
-    pageleft.insertBefore(table, pageleft.children[4]);
+    pageleft.insertBefore(table, pageleft.children[pageleft.children.length-1]);
 })();
