@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CS-EnhancedTableLayouter
-// @version      0.2
+// @version      0.3
 // @description  Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author       Sellyme
 // @include      https://cyberscore.me.uk/game/1550
@@ -56,7 +56,8 @@
         tbody.appendChild(row);
     }
 
-    let groupNames = []
+    let groupNames = [];
+    let chartNames = [];
     for(let i = groupStart; i < groupEnd; i++){
         let groupName = tables[i].children[0].children[1].innerText;
         if(gameNum==2911) {
@@ -64,29 +65,41 @@
             groupName = groupName.replace("Treasure Collected by Land (","").replace(")","");
         }
         groupNames.push(groupName)
+
+        //c represents the current chart count of THIS group, so that we can skip an chart from the main group and stay synced
+        let c = 0;
         let charts = tables[i].getElementsByClassName("chart");
-        for(let j = 0; j < charts.length; j++){
-            let chart = charts[j];
+        for(let j = 0, c = 0; c < chartCount && j < charts.length; j++){
+            let chart = charts[c];
             let rank = chart.children[0];
             let link = chart.children[1];
             let score = chart.children[2];
 
             if(i == groupStart){
+                //only set the chartName on the first group
+                chartNames[j] = link.innerText.trim();
                 let chartName = document.createElement("td");
                 chartName.appendChild(document.createTextNode(link.innerText)); //link.innerText.replaceAll(/\s/g,"")
                 tbody.children[j].appendChild(chartName);
             }
 
             let td = document.createElement("td");
-            let small = document.createElement("small");
-            td.appendChild(small);
-            for(let k = 0; k < rank.children.length; k++){
-                small.appendChild(rank.children[k].cloneNode(true));
+            //if we don't match the chart name from the primary group, leave this cell blank
+            //note that this means every single chart in any group MUST be in the groupStart group, in order
+            if(link.innerText.trim() != chartNames[j]) {
+                tbody.children[j].appendChild(td);
+            } else {
+                let small = document.createElement("small");
+                td.appendChild(small);
+                for(let k = 0; k < rank.children.length; k++){
+                    small.appendChild(rank.children[k].cloneNode(true));
+                }
+                let newLink = link.getElementsByTagName("a")[0].cloneNode(true);
+                newLink.innerText = score.innerText.replace(/\n/g, "");
+                td.appendChild(newLink);
+                tbody.children[j].appendChild(td);
+                c++; //no, this is JavaScript
             }
-            let newLink = link.getElementsByTagName("a")[0].cloneNode(true);
-            newLink.innerText = score.innerText.replace(/\n/g, "");
-            td.appendChild(newLink);
-            tbody.children[j].appendChild(td);
         }
     }
 
