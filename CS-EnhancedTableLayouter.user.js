@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         CS-EnhancedTableLayouter
-// @version      0.1
+// @version      0.2
 // @description  Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author       Sellyme
 // @include      https://cyberscore.me.uk/game/1550
 // @include      https://cyberscore.me.uk/game/2785
+// @include      https://cyberscore.me.uk/game/2911
 // @namespace    https://github.com/Sellyme/cyberscore-userscripts/
 // @homepageURL  https://github.com/Sellyme/cyberscore-userscripts/
 // @downloadURL  https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedTableLayouter.user.js
@@ -33,6 +34,11 @@
             groupStart = 0;
             groupEnd = 4;
             break;
+        case 2911:
+            tables = document.getElementsByClassName("all");
+            groupStart = 2;
+            groupEnd = 7;
+            break;
         default:
             tables = document.getElementsByClassName("standard all");
             groupStart = 0;
@@ -52,7 +58,12 @@
 
     let groupNames = []
     for(let i = groupStart; i < groupEnd; i++){
-        groupNames.push(tables[i].children[0].children[1].innerText)
+        let groupName = tables[i].children[0].children[1].innerText;
+        if(gameNum==2911) {
+            //HyperRogue's group titles are too long, so shorten them.
+            groupName = groupName.replace("Treasure Collected by Land (","").replace(")","");
+        }
+        groupNames.push(groupName)
         let charts = tables[i].getElementsByClassName("chart");
         for(let j = 0; j < charts.length; j++){
             let chart = charts[j];
@@ -62,7 +73,7 @@
 
             if(i == groupStart){
                 let chartName = document.createElement("td");
-                chartName.appendChild(document.createTextNode(link.innerText.replaceAll(/\s/g,"")));
+                chartName.appendChild(document.createTextNode(link.innerText)); //link.innerText.replaceAll(/\s/g,"")
                 tbody.children[j].appendChild(chartName);
             }
 
