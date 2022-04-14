@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CS-EnhancedTableLayouter
-// @version      0.4
+// @version      0.5
 // @description  Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author       Sellyme
 // @include      https://cyberscore.me.uk/game/1550
@@ -71,7 +71,15 @@
         //c represents the current chart count of THIS group, so that we can skip an chart from the main group and stay synced
         let c = 0;
         let charts = tables[i].getElementsByClassName("chart");
-        for(let j = 0, c = 0; c < chartCount && j < charts.length; j++){
+        for(let j = 0, c = 0; j < chartCount; j++){
+            //if we've run out of charts in this group, just print out an empty cell for all remaining charts in the main group
+            let td = document.createElement("td");
+            if(j >= charts.length) {
+                tbody.children[j].appendChild(td);
+                c++;
+                continue;
+            }
+            //otherwise, get chart data
             let chart = charts[c];
             let rank = chart.children[0];
             let link = chart.children[1];
@@ -85,7 +93,6 @@
                 tbody.children[j].appendChild(chartName);
             }
 
-            let td = document.createElement("td");
             //if we don't match the chart name from the primary group, leave this cell blank
             //note that this means every single chart in any group MUST be in the groupStart group, in order
             if(link.innerText.trim() != chartNames[j]) {
