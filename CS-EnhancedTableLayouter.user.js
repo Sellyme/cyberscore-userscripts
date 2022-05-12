@@ -68,8 +68,8 @@
         }
         groupNames.push(groupName)
 
+
         //c represents the current chart count of THIS group, so that we can skip an chart from the main group and stay synced
-        let c = 0;
         let charts = tables[i].getElementsByClassName("chart");
         //charts is the array of existing charts for the selected group
         //c indexes our current position in this array
@@ -82,11 +82,12 @@
         for(let j = 0, c = 0; j < chartCount; j++){
             //if we've run out of charts in this group, just print out an empty cell for all remaining charts in the main group
             let td = document.createElement("td");
-            if(j >= charts.length) {
+            if(c >= charts.length) {
                 tbody.children[j].appendChild(td);
                 c++;
                 continue;
             }
+
             //otherwise, get chart data
             let chart = charts[c];
             let rank = chart.children[0];
