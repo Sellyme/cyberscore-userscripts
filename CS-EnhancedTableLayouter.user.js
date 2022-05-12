@@ -71,6 +71,14 @@
         //c represents the current chart count of THIS group, so that we can skip an chart from the main group and stay synced
         let c = 0;
         let charts = tables[i].getElementsByClassName("chart");
+        //charts is the array of existing charts for the selected group
+        //c indexes our current position in this array
+        //we're about to iterate over chartCount, which is the total number of charts in the parent group
+        //and j indicates the index for that array
+        //when we want to skip a chart from the main group (because it's not in the current group) we should be incrementing j, but not c
+        //and we should keep going until j exceeds chartCount
+        console.log("GENERATING CHARTS FOR GROUP " + groupName);
+        console.log("Expecting up to " + chartCount + " charts, found " + charts.length);
         for(let j = 0, c = 0; j < chartCount; j++){
             //if we've run out of charts in this group, just print out an empty cell for all remaining charts in the main group
             let td = document.createElement("td");
@@ -96,6 +104,7 @@
             //if we don't match the chart name from the primary group, leave this cell blank
             //note that this means every single chart in any group MUST be in the groupStart group, in order
             if(link.innerText.trim() != chartNames[j]) {
+                console.log("Skipping chart '" + chartNames[j] + "' as it doesn't match next chart '" + link.innerText.trim());
                 tbody.children[j].appendChild(td);
             } else {
                 let small = document.createElement("small");
