@@ -33,7 +33,7 @@
         case 2006:
             tables = document.getElementsByClassName("all");
             groupStart = 3;
-            groupEnd = tables.length;
+            groupEnd = 7;
             break;
         case 2785:
             tables = document.getElementsByClassName("standard all");
