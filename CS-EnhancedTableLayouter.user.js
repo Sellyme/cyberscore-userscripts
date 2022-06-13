@@ -4,6 +4,7 @@
 // @description  Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author       Sellyme
 // @include      https://cyberscore.me.uk/game/1550
+// @include      https://cyberscore.me.uk/game/2006
 // @include      https://cyberscore.me.uk/game/2785
 // @include      https://cyberscore.me.uk/game/2911
 // @namespace    https://github.com/Sellyme/cyberscore-userscripts/
@@ -29,10 +30,15 @@
             groupStart = 1;
             groupEnd = tables.length;
             break;
+        case 2006:
+            tables = document.getElementsByClassName("all");
+            groupStart = 3;
+            groupEnd = 7;
+            break;
         case 2785:
             tables = document.getElementsByClassName("standard all");
             groupStart = 0;
-            groupEnd = 4;
+            groupEnd = 5;
             break;
         case 2911:
             tables = document.getElementsByClassName("all");
