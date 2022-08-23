@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CS-EnhancedTableLayouter
-// @version      0.6.3
+// @version      0.6.4
 // @description  Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author       Sellyme
 // @include      https://cyberscore.me.uk/game/1419
@@ -105,19 +105,31 @@
             let rank = chart.children[0];
             let link = chart.children[1];
             let score = chart.children[2];
+            let chartName = link.innerText.trim();
 
             if(i == groupStart){
                 //only set the chartName on the first group
-                chartNames[j] = link.innerText.trim();
-                let chartName = document.createElement("td");
-                chartName.appendChild(document.createTextNode(link.innerText)); //link.innerText.replaceAll(/\s/g,"")
-                tbody.children[j].appendChild(chartName);
+                chartNames[j] = chartName;
+                let nameNode = document.createElement("td");
+                nameNode.appendChild(document.createTextNode(link.innerText)); //link.innerText.replaceAll(/\s/g,"")
+                tbody.children[j].appendChild(nameNode);
             }
+
+			//we need some special handling for Extreme Road Trip 2
+			if(gameNum==1419) {
+				//for most groups the chart for your best score independent of vehicle is named "Overall"
+				//however in Best 2K, Best 5K, and Best 10K the chart is named "Any Vehicle"
+				//so we just force those two strings to match each other
+				//(we can do this after setting chartNames[] since the first occurence is at i=8)
+				if(chartName == "Any Vehicle") {
+					chartName = "Overall";
+				}
+			}
 
             //if we don't match the chart name from the primary group, leave this cell blank
             //note that this means every single chart in any group MUST be in the groupStart group, in order
-            if(link.innerText.trim() != chartNames[j]) {
-                console.log("Skipping chart '" + chartNames[j] + "' as it doesn't match next chart '" + link.innerText.trim());
+            if(chartName != chartNames[j]) {
+                console.log("Skipping chart '" + chartNames[j] + "' as it doesn't match next chart '" + chartName);
                 tbody.children[j].appendChild(td);
             } else {
                 let small = document.createElement("small");
