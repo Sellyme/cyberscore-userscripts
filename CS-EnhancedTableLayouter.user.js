@@ -29,7 +29,8 @@
         case 1419: //Extreme Road Trip 2
             tables = document.getElementsByClassName("all");
             groupStart = 0;
-            groupEnd = 11;
+            groupEnd = 12;
+            break;
         case 1550: //Pokemon Rumble World
             tables = document.getElementsByClassName("all");
             groupStart = 1;
