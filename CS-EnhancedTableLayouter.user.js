@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CS-EnhancedTableLayouter
-// @version      0.6.4
+// @version      0.7.0
 // @description  Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author       Sellyme
 // @include      https://cyberscore.me.uk/game/1419
@@ -61,8 +61,11 @@
     let table = document.createElement("table");
     table.classList.add("gamelist");
     table.style = "margin-bottom: 5px;";
+    let thead = document.createElement("thead");
     let tbody = document.createElement("tbody");
+    thead.classList.add("standard", "all");
     tbody.classList.add("standard", "all");
+    table.appendChild(thead);
     table.appendChild(tbody);
     for(let i = 0; i < chartCount; i++){
         let row = document.createElement("tr");
@@ -146,24 +149,34 @@
         }
     }
 
-    let row = document.createElement("tr");
-    row.classList.add("group");
-    row.classList.add("standard");
+    //build the header row
+    let headerRow = document.createElement("tr");
+    headerRow.classList.add("group");
+    headerRow.classList.add("standard");
     //add a collapse button
-    let collapseCell = document.createElement("td");
+    let collapseCell = document.createElement("th");
     let collapseLink = document.createElement("a");
     collapseLink.innerText = "Collapse";
     collapseLink.href = "#";
     collapseLink.onclick = function() {return toggleGroup(this)}; //part of CS's standard JS suite
     collapseCell.appendChild(collapseLink);
-    row.appendChild(collapseCell);
+    //to stick the header row to the top of the table when scrolling we need some custom CSS, which we apply to each <th> cell
+    //(it'd be better to just inject a class CSS rule but this is fairly simple for now so it's probably okay)
+    collapseCell.style.backgroundColor = "var(--color-standard)"; //this colour name is part of the CS global libs
+    collapseCell.style.position = "sticky";
+    collapseCell.style.top = 0;
+    headerRow.appendChild(collapseCell);
     //and then add the group names
     for(let i = groupStart; i < groupEnd; i++){
-        let td = document.createElement("td");
-        td.appendChild(document.createTextNode(groupNames[i-groupStart]));
-        row.appendChild(td);
+        let th = document.createElement("th");
+        //more sticky header CSS
+        th.style.backgroundColor = "var(--color-standard)";
+        th.style.position = "sticky";
+        th.style.top = 0;
+        th.appendChild(document.createTextNode(groupNames[i-groupStart]));
+        headerRow.appendChild(th);
     }
-    tbody.insertBefore(row, tbody.firstChild);
+    thead.appendChild(headerRow);
 
     let pageleft = document.getElementById("pageleft");
     pageleft.insertBefore(table, pageleft.children[pageleft.children.length-1]);
