@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CS-EnhancedTableLayouter
-// @version      0.7.0
+// @version      0.7.1
 // @description  Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author       Sellyme
 // @include      https://cyberscore.me.uk/game/1419
@@ -158,7 +158,7 @@
     let collapseLink = document.createElement("a");
     collapseLink.innerText = "Collapse";
     collapseLink.href = "#";
-    collapseLink.onclick = function() {return toggleGroup(this)}; //part of CS's standard JS suite
+    collapseLink.onclick = function() {return toggleGroup(tbody)}; //part of CS's standard JS suite
     collapseCell.appendChild(collapseLink);
     //to stick the header row to the top of the table when scrolling we need some custom CSS, which we apply to each <th> cell
     //(it'd be better to just inject a class CSS rule but this is fairly simple for now so it's probably okay)
