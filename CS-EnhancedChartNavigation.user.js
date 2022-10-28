@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CS-EnhancedChartNavigation
-// @version      1.0.3
+// @version      1.0.4
 // @description  Extends navigation between charts beyond just "Next"/"Previous"
 // @author       Sellyme
 // @include      https://cyberscore.me.uk/chart/*
@@ -29,26 +29,6 @@
 	prevDiv.style.width = "50%"
 	prevDiv.style.float = "left";
 
-	//automatically create the desired previous navigation options
-	var navsToCreate = [-5, -4, -3, -2]; //adjust these if you'd like different nav options
-	for(var i = 0; i < navsToCreate.length; i++) {
-		var offset = navsToCreate[i]
-		var newNav = document.createElement('a');
-		newNav.innerText = navsToCreate[i];
-		newNav.href = "/chart/" + (currChart+offset)
-		prevDiv.appendChild(newNav);
-	}
-	//and also append the "Prev" to the end
-	var prevNav = document.createElement('a');
-	prevNav.innerText = "Prev";
-	if(prevLink == undefined) {
-		//if the link is undefined (outside of the selected group), overwrite it with a -1
-		prevNav.href = "/chart/" + (currChart - 1)
-	} else {
-		prevNav.href = prevLink;
-	}
-	prevDiv.appendChild(prevNav)
-
 	//build the right-hand side of navigation
 	var nextDiv = document.createElement('div');
 	nextDiv.style.display = "flex";
@@ -56,27 +36,42 @@
 	nextDiv.style.width = "50%"
 	nextDiv.style.float = "right";
 
-	//for this one we need to append the "Next" first
-	var nextNav = document.createElement('a');
-	nextNav.innerText = "Next";
-	if(nextLink == undefined) {
-		//if the link is undefined (outside of the selected group), overwrite it with a +1
-		nextNav.href = "/chart/" + (currChart + 1)
-	} else {
-		nextNav.href = nextLink;
-	}
-	nextDiv.appendChild(nextNav);
-	//and then automatically create the next navigation options
-	navsToCreate = [2, 3, 4, 5]; //adjust these if you'd like different nav options
-	for(var j = 0; j < navsToCreate.length; j++) {
-		offset = navsToCreate[j]
-		newNav = document.createElement('a');
-		newNav.innerText = "+"+navsToCreate[j];
-		newNav.href = "/chart/" + (currChart+offset)
-		nextDiv.appendChild(newNav);
+    //find the existing Select element and build the <options> list
+    var sel = document.getElementsByName("id")[0];
+    var opts = sel.getElementsByTagName("option");
+    var optIdx = sel.selectedIndex; //this is the chart we're currently looking at
+
+	//automatically create the desired previous navigation options
+	var navsToCreate = [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]; //adjust these if you'd like different nav options
+	for(var i = 0; i < navsToCreate.length; i++) {
+		var newNav = document.createElement('a');
+		var chartPos = optIdx + navsToCreate[i];
+        //only fill in nav link if the chart is within range
+        if(chartPos >= 0 && chartPos < opts.length) {
+            //use "Prev" and "Next" for differences of ±1, otherwise print the difference
+            if(navsToCreate[i] == 1) {
+                newNav.innerText = "Next";
+            } else if(navsToCreate[i] == -1) {
+                newNav.innerText = "Prev";
+            } else if (navsToCreate[i] > 1) {
+                newNav.innerText = "+"+navsToCreate[i];
+            } else {
+                newNav.innerText = navsToCreate[i];
+            }
+            newNav.href = opts[chartPos].value;
+        }
+        //and append to either prevDiv or newDiv depending on polarity of number
+        //we do this outside the range checking block so that near the edges of the range the remaining links don't take up too much horizontal space
+        if(navsToCreate[i] < 0) {
+            prevDiv.appendChild(newNav);
+        } else if (navsToCreate[i] > 0) {
+            nextDiv.appendChild(newNav);
+        } else {
+            console.warn("CS-EnhancedChartNavigation Warning: Your navsToCreate configuration includes an invalid setting. Please use only non-zero integers.");
+        }
 	}
 
-	//and chuck them into the DOM
+	//and chuck the fully-formed navs into the DOM
 	navRow.appendChild(prevDiv);
 	navRow.appendChild(nextDiv);
 })();
