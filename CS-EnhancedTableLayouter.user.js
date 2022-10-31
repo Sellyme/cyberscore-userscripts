@@ -8,6 +8,7 @@
 // @include      https://cyberscore.me.uk/game/2006
 // @include      https://cyberscore.me.uk/game/2785
 // @include      https://cyberscore.me.uk/game/2911
+// @include      https://cyberscore.me.uk/game/3089
 // @namespace    https://github.com/Sellyme/cyberscore-userscripts/
 // @homepageURL  https://github.com/Sellyme/cyberscore-userscripts/
 // @downloadURL  https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedTableLayouter.user.js
@@ -31,17 +32,17 @@
             groupStart = 0;
             groupEnd = 12;
             break;
-        case 1550: //Pokemon Rumble World
+        case 1550: //Pokémon Rumble World
             tables = document.getElementsByClassName("all");
             groupStart = 1;
             groupEnd = tables.length;
             break;
-        case 2006: //Pokemon Go
+        case 2006: //Pokémon Go
             tables = document.getElementsByClassName("all");
             groupStart = 3;
             groupEnd = 8;
             break;
-        case 2785: //Pokemon Snap 2
+        case 2785: //New Pokémon Snap
             tables = document.getElementsByClassName("standard all");
             groupStart = 0;
             groupEnd = 5;
@@ -50,6 +51,11 @@
             tables = document.getElementsByClassName("all");
             groupStart = 2;
             groupEnd = 7;
+            break;
+	case 3089: //Dustforce / Dustforce DX
+            tables = document.getElementsByClassName("all");
+            groupStart = 0;
+            groupEnd = tables.length;
             break;
         default:
             tables = document.getElementsByClassName("standard all");
