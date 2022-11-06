@@ -42,7 +42,7 @@
             groupStart = 3;
             groupEnd = 8;
             break;
-        case 2785: //New Pokémon Snap
+        case 2785: //Pokémon Snap 2
             tables = document.getElementsByClassName("standard all");
             groupStart = 0;
             groupEnd = 5;
