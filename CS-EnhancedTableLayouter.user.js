@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		0.7.2
+// @version		0.8.0
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @include		https://cyberscore.me.uk/game/1419
@@ -114,6 +114,9 @@
 			let link = chart.children[1];
 			let score = chart.children[2];
 			let chartName = link.innerText.trim();
+			//we want to colour the hyperlink to the chart (which in this format is the score) according to the chart type
+			//to do this we look at the existing hyperlink and just yoink its styling
+			let linkColor = getComputedStyle(link.firstElementChild).color;
 
 			if(i == groupStart){
 				//only set the chartName on the first group
@@ -137,7 +140,7 @@
 			//if we don't match the chart name from the primary group, leave this cell blank
 			//note that this means every single chart in any group MUST be in the groupStart group, in order
 			if(chartName != chartNames[j]) {
-				console.log("Skipping chart '" + chartNames[j] + "' as it doesn't match next chart '" + chartName);
+				console.log("Skipping chart '" + chartNames[j] + "' as it doesn't match next chart '" + chartName + "'");
 				tbody.children[j].appendChild(td);
 			} else {
 				let small = document.createElement("small");
@@ -147,6 +150,7 @@
 				}
 				let newLink = link.getElementsByTagName("a")[0].cloneNode(true);
 				newLink.innerText = " " + score.innerText.trim().replace(/\n/g, "");
+				newLink.style.color = linkColor;
 				td.appendChild(newLink);
 				tbody.children[j].appendChild(td);
 				c++; //no, this is JavaScript
