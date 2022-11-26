@@ -8,16 +8,12 @@
 // @homepageURL  https://github.com/Sellyme/cyberscore-userscripts/
 // @downloadURL  https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedCharts.user.js
 // @updateURL    https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedCharts.user.js
+// @require      https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js
+// @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js
 // ==/UserScript==
 (function() {
-    //We need ChartJS to load to do anything, so pull that in and run the UI builder as soon as it's done.
-    var JSDependencies = [
-        "https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js",
-        "https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js",
-        //"https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.30.1/date_fns.min.js",
-    ]
-    loadDependencies(JSDependencies, 0);
     var chartData = {"users": {}};
+	buildUI();
 
     async function buildUI() {
         //first problem - we need to jam all of this crap into the header
@@ -382,38 +378,5 @@
             "#C895C5", "#320033", "#FF6832", "#66E1D3", "#CFCDAC", "#D0AC94", "#7ED379", "#012C58"
         ]
         return colours[n];
-    }
-
-    function loadDependencies(dependencies, n) {
-        var callback = function() { loadDependencies(dependencies, n+1); };
-        if(n == dependencies.length - 1) {
-            callback = buildUI;
-        }
-
-        loadjsfile(dependencies[n], callback);
-    }
-
-    function loadjsfile(filename, callback) {
-        console.log("Loading " + filename);
-        var fileref = document.createElement('script')
-        fileref.setAttribute("type", "text/javascript")
-        fileref.setAttribute("src", filename)
-        if (fileref.readyState) {
-            fileref.onreadystatechange = function() { /*IE*/
-                if (fileref.readyState == "loaded" || fileref.readyState == "complete") {
-                    fileref.onreadystatechange = null;
-                    callback();
-                }
-            }
-        } else {
-            fileref.onload = function() { /*Other browsers*/
-                callback();
-            }
-        }
-
-        // Try to find the head, otherwise default to the documentElement
-        if (typeof fileref != "undefined") {
-            (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(fileref)
-        }
     }
 })();
