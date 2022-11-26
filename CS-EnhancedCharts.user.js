@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CS-Enhanced Charts
-// @version      0.2b
+// @version      0.3.0
 // @description  Add various extended functionality to Cyberscore chart pages
 // @author       Sellyme
 // @match        https://cyberscore.me.uk/chart/*
