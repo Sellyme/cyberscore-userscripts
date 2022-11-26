@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CS-Enhanced Charts
-// @version      0.3.0
+// @version      0.3.1
 // @description  Add various extended functionality to Cyberscore chart pages
 // @author       Sellyme
 // @match        https://cyberscore.me.uk/chart/*
@@ -329,17 +329,35 @@
 
 	//this function takes in a number of seconds and formats it as hh:mm:ss. Decimals should(?) be just left on the seconds component
 	function formatAsHHMMSS(seconds) {
+		var decimals = 0; //default
+		if(typeof seconds == "string") {
+			var decimalPos = seconds.indexOf(".");
+			if(decimalPos) {
+				decimals = seconds.length - seconds.indexOf(".") - 1;
+			} else {
+				decimals = 0;
+			}
+			seconds = parseFloat(seconds.replace(",","")); //for some reason this can have a comma in it!
+		}
 		var hours = Math.floor(seconds / 3600);
 		seconds = seconds % 3600;
 		var minutes = Math.floor(seconds / 60);
 		seconds = seconds % 60;
+		var fraction = seconds % 1;
+		seconds = Math.floor(seconds);
 
+		var output;
 		//we only want to print hours if it's nonzero, but we always print minutes
 		if(hours) {
-			return hours+":"+padDigits(minutes, 2)+":"+padDigits(seconds, 2);
+			output = hours+":"+padDigits(minutes, 2)+":"+padDigits(seconds, 2);
 		} else {
-			return minutes+":"+padDigits(seconds, 2);
+			output = minutes+":"+padDigits(seconds, 2);
 		}
+		//add decimal if needed
+		if(decimals) {
+			output += fraction.toFixed(decimals).substring(1); //round to whatever the string originally had, and strip the leading 0
+		}
+		return output;
 	}
 
 	function padDigits(n, totalDigits) {
