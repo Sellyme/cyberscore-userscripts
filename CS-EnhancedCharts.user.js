@@ -253,28 +253,53 @@
                 var timestamp = tz_corrected_date.getTime();
                 var scoreObj = {"x": timestamp, "y": score.score};
 
-                //before the oldest submission time, draw a line from that score to a 0 score at the same timestamp
-                if(j == 0) {
+				//before the oldest submission time, draw a line from that score to a 0 score at the same timestamp
+				//(it's probably fine that we're doing this before the sanity checking step, but maybe shuffle it around if it generates any weird graphs)
+				if(j == 0) {
 					//note that in the case of "lowest wins" scores, we want to draw the line *up*, so check that
 					if(chartData.chartDir == "high") {
 						formattedScores.push({"x": timestamp-1, "y": 0});
 					} else if (chartData.chartDir == "low") {
 						formattedScores.push({"x": timestamp-1, "y": Number.MAX_SAFE_INTEGER});
 					}
-                }
+				}
 
-                //basic sanity checking - we want to skip any score that lasted less than 60 seconds (probably a typo)
-                if(j < (scores.length-1)) { //if this was not the most recent score
-                    //then get the next-most-recent
-                    var newer_timestamp = new Date(scores[j+1].time).getTime();
-                    //timestamps are in milliseconds, so 60000 is 60 seconds
-                    //compare to the non-timezone-adjusted timestamp for this, to save having to convert the second timestamp as well
-                    if(newer_timestamp < (utc_timestamp + 60000)) { //if adding one minute to the older score makes a more recent date than the newer score
-                        continue; //then skip the older score, as it was likely a typo that was immediately corrected
-                    }
-                }
-                //todo - also skip scores that were worse than the previous one (as long as the previous one wasn't skipped)
-                //(does this actually make sense? Probably loads of errors)
+				//basic sanity checking for historical scores
+				if(j < scores.length - 1) {
+					//we can just ignore any score that lasted less than 60 seconds - probably a typo and won't really be visible anyway
+					var nextScore = scores[j+1];
+					var nextScore_utc = new Date(nextScore.time).getTime();
+					//timestamps are in milliseconds, so 60000 is 60 seconds
+					//compare to the non-timezone-adjusted timestamp for this, to save having to convert the second timestamp as well
+					if(nextScore_utc - utc_timestamp < 60 * 1000) {
+						continue; //then skip the older score, as it was likely a typo that was immediately corrected
+					} else if (nextScore_utc - utc_timestamp < 24 * 60 * 60 * 1000) { //24hr * 60 minutes * 60 seconds * 1000ms
+						//we also want to skip scores that were replaced within a slightly larger time frame (1 day?) under some conditions
+						//as these are almost certainly typos
+						//(right now we assume that users never make two mistakes in a row... which might be an issue)
+						//condition A - the score was replaced with a worse score
+						//if the nextScore is higher and chartType is higher wins,  OR nextScore is lower and chartType is lower wins, ignore
+						if((score.score > nextScore.score && chartData.chartDir == "high") || (score.score < nextScore.score && chartData.chartDir == "low")) {
+							continue;
+						}
+
+						//condition B - it was a worse score than the user's previous one, and was replaced with a *better* score than the user's previous one
+						//(only need to run if index > 0)
+						if(j > 0) {
+							var lastScore = scores[j-1];
+							//logic on this one is very slightly more complicated so we run on each chartDir separately rather than in one statement
+							if(chartData.chartDir == "high") {
+								if(score.score < lastScore.score && nextScore.score > lastScore.score) {
+									continue;
+								}
+							} else if (chartData.chartDir == "low") {
+								if(score.score > lastScore.score && nextScore.score < lastScore.score) {
+									continue;
+								}
+							}
+						}
+					}
+				}
 
                 //if this is the new worst or best score, adjust the chart y-axis
 				if(lowestValidScore === null || score.score < lowestValidScore) {
