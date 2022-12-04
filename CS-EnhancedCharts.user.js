@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-Enhanced Charts
-// @version		0.3.2
+// @version		0.4.0b
 // @description	Add various extended functionality to Cyberscore chart pages
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/chart/*
@@ -14,6 +14,16 @@
 (function() {
 	var chartData = {"users": {}};
 	buildUI();
+
+	var debug = true;
+	var manualCorrections = {
+		//type change -  display the update as having the value of fixedScore instead of what was submitted (for use correcting obvious typos)
+		//type delete - completely ignore this record update (for use when "correct" score unknown")
+		//type keep - even if this score gets caught by the autocorrection system, display it anyway (for use if the game changed and body of work scores got decreased)
+		4015113: {"type": "change", "fixedScore": 5253104}, //One in a Trillion - Taps (c:594040)
+		4015114: {"type": "delete"}, //One in a Trillion - Taps + Gem Pops (c:594039)
+		3994829: {"type": "change", "fixedScore": 13040}, //One in a Trillion - Total eggs found (c:594042)
+	};
 
 	async function buildUI() {
 		//first problem - we need to jam all of this crap into the header
@@ -113,7 +123,18 @@
 				users[user_id] = {"user": user_name, "scores": []};
 			}
 			//todo - right now we just ignore score2, since it's very rarely relevant
-			var score = {"type": "update", "time": sub.update_date, "score": sub.submission, "score2": sub.submission2};
+
+			//do any manual corrections that have been saved
+			if(sub.history_id in manualCorrections) {
+				var correction = manualCorrections[sub.history_id];
+				if(correction.type == "delete") {
+					continue;
+				} else {
+					sub.submission = correction.fixedScore;
+				}
+			}
+
+			var score = {"type": "update", "time": sub.update_date, "score": sub.submission, "score2": sub.submission2, "history_id": sub.history_id, "comment": sub.comment};
 			users[user_id].scores.push(score);
 		}
 		//and now for each user we want to sort scores[] to go from oldest to newest
@@ -197,6 +218,7 @@
 							return context[0].dataset.label;
 						},*/
 							beforeLabel: function(tooltip) {
+								if(debug) { console.log("beforeLabel"); console.log(tooltip); }
 								//check to see if this entry is a "faked" one with the current datetime
 								//that was used to extend the line to right of screen
 								var dateLabel;
@@ -208,6 +230,7 @@
 								return "Date: " + dateLabel;
 							},
 							label: function(tooltip) {
+								if(debug) { console.log("Label:"); console.log(tooltip); }
 								//for time-based scores we want to parse it first
 								var score;
 								if(chartData.chartType == "time") {
@@ -218,7 +241,12 @@
 								return "Score: " + score;
 							},
 							afterLabel: function(tooltip) {
-								return "By: " + tooltip.dataset.label;
+								var author_str = "By: " + tooltip.dataset.label;
+								if(debug) {
+									console.log("afterLabel"); console.log(tooltip);
+									author_str += " (id:" + tooltip.raw.history_id +")";
+								}
+								return author_str;
 							}
 						}
 					}
@@ -251,7 +279,7 @@
 				var utc_timestamp = date.getTime(); //creating a unix timestamp and doing maths on it is easier than actually modifying the date object
 				var tz_corrected_date = new Date(utc_timestamp - (offset * 60 * 1000));
 				var timestamp = tz_corrected_date.getTime();
-				var scoreObj = {"x": timestamp, "y": score.score};
+				var scoreObj = {"x": timestamp, "y": score.score, "history_id": score.history_id};
 
 				//before the oldest submission time, draw a line from that score to a 0 score at the same timestamp
 				//(it's probably fine that we're doing this before the sanity checking step, but maybe shuffle it around if it generates any weird graphs)
