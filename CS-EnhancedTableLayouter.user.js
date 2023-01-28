@@ -3,13 +3,13 @@
 // @version		0.8.2
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
-// @match		https://cyberscore.me.uk/games/118
-// @match		https://cyberscore.me.uk/games/1419
-// @match		https://cyberscore.me.uk/games/1550
-// @match		https://cyberscore.me.uk/games/2006
-// @match		https://cyberscore.me.uk/games/2785
-// @match		https://cyberscore.me.uk/games/2911
-// @match		https://cyberscore.me.uk/games/3089
+// @match		https://cyberscore.me.uk/game*/118
+// @match		https://cyberscore.me.uk/game*/1419
+// @match		https://cyberscore.me.uk/game*/1550
+// @match		https://cyberscore.me.uk/game*/2006
+// @match		https://cyberscore.me.uk/game*/2785
+// @match		https://cyberscore.me.uk/game*/2911
+// @match		https://cyberscore.me.uk/game*/3089
 // @namespace	https://github.com/Sellyme/cyberscore-userscripts/
 // @homepageURL	https://github.com/Sellyme/cyberscore-userscripts/
 // @downloadURL	https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedTableLayouter.user.js
@@ -146,7 +146,7 @@
 			//if we don't match the chart name from the primary group, leave this cell blank
 			//note that this means every single chart in any group MUST be in the groupStart group, in order
 			if(chartName != chartNames[j]) {
-				console.log("Skipping chart '" + chartNames[j] + "' as it doesn't match next chart '" + chartName + "'");
+				//console.log("Skipping chart '" + chartNames[j] + "' as it doesn't match next chart '" + chartName + "'");
 				tbody.children[j].appendChild(td);
 			} else {
 				let small = document.createElement("small");
