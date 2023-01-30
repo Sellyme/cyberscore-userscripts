@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-Enhanced Charts
-// @version		0.4.0b
+// @version		0.4.0c
 // @description	Add various extended functionality to Cyberscore chart pages
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/chart/*
@@ -20,6 +20,7 @@
 		//type change -  display the update as having the value of fixedScore instead of what was submitted (for use correcting obvious typos)
 		//type delete - completely ignore this record update (for use when "correct" score unknown")
 		//type keep - even if this score gets caught by the autocorrection system, display it anyway (for use if the game changed and body of work scores got decreased)
+		4059012: {"type": "change", "fixedScore": 3}, //One in a Trillion - Braxton Completion Marks (c:615383)
 		4015113: {"type": "change", "fixedScore": 5253104}, //One in a Trillion - Taps (c:594040)
 		4015114: {"type": "delete"}, //One in a Trillion - Taps + Gem Pops (c:594039)
 		3994829: {"type": "change", "fixedScore": 13040}, //One in a Trillion - Total eggs found (c:594042)
@@ -196,7 +197,8 @@
 								} else {
 									return value;
 								}
-							}
+							},
+							precision: 3,
 						}
 					}
 				},
