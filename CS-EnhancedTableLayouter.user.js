@@ -11,6 +11,7 @@
 // @match		https://cyberscore.me.uk/game*/2911
 // @match		https://cyberscore.me.uk/game*/3089
 // @match		https://cyberscore.me.uk/game*/3228
+// @match		https://cyberscore.me.uk/game*/3231
 // @namespace	https://github.com/Sellyme/cyberscore-userscripts/
 // @homepageURL	https://github.com/Sellyme/cyberscore-userscripts/
 // @downloadURL	https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedTableLayouter.user.js
@@ -68,6 +69,11 @@
 			groupStart = 6;
 			groupEnd = 10;
 			break;
+		case 3231: //Theatrhythm Final Bar Line
+			tables = document.getElementsByClassName("all");
+			groupStart = 2;
+			groupEnd = 36;
+			break;
 		default:
 			tables = document.getElementsByClassName("standard all");
 			groupStart = 0;
@@ -95,8 +101,16 @@
 	for(let i = groupStart; i < groupEnd; i++){
 		let groupName = tables[i].children[0].children[1].innerText;
 		if(gameNum==2911) {
+			//Dustforces's group titles are too long, so shorten them.
+			groupName = groupName.replace("Fastest Time ","Time ").replace("SS Rank","SS ");
+		}
+		if(gameNum==2911) {
 			//HyperRogue's group titles are too long, so shorten them.
 			groupName = groupName.replace("Treasure Collected by Land (","").replace(")","");
+		}
+		if(gameNum==3231) {
+			//Theatrhythm Final Bar Line needs a lot of group names, so shorten them.
+			groupName = groupName.replace("Score ","").replace("High ","").replace("Max ","").replace("Times ","");
 		}
 		groupNames.push(groupName)
 
