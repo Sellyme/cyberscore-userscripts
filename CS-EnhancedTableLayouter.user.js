@@ -97,6 +97,9 @@
 		if(gameNum==2911) {
 			//HyperRogue's group titles are too long, so shorten them.
 			groupName = groupName.replace("Treasure Collected by Land (","").replace(")","");
+		} else if (gameNum==3228) {
+			//Hades' group titles are also too long
+			groupName = groupName.replace("Permanent Record – ","");
 		}
 		groupNames.push(groupName)
 
