@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		0.8.3
+// @version		0.8.4
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -15,7 +15,17 @@
 // @homepageURL	https://github.com/Sellyme/cyberscore-userscripts/
 // @downloadURL	https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedTableLayouter.user.js
 // @updateURL	https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedTableLayouter.user.js
+// @grant		GM_addStyle
 // ==/UserScript==
+GM_addStyle(
+`
+	.enhancedTable img {
+		top: 3px;
+		position: relative;
+	}
+`
+);
+
 (function(){
 	//for games where there's chart groups outside of the ones that suit a 2D records table, we need special handling
 	//to do this we identify the start idx, end idx, and group types we want
@@ -76,7 +86,7 @@
 	const chartCount = tables[groupStart].getElementsByClassName("chart").length;
 
 	let table = document.createElement("table");
-	table.classList.add("gamelist");
+	table.classList.add("gamelist","enhancedTable");
 	table.style = "margin-bottom: 5px;";
 	let thead = document.createElement("thead");
 	let tbody = document.createElement("tbody");
@@ -160,8 +170,13 @@
 			} else {
 				let small = document.createElement("small");
 				td.appendChild(small);
-				for(let k = 0; k < rank.children.length; k++){
-					small.appendChild(rank.children[k].cloneNode(true));
+				//copy in the medal icon if applicable
+				if(rank.children.length > 0) {
+					for(let k = 0; k < rank.children.length; k++){
+						small.appendChild(rank.children[k].cloneNode(true));
+					}
+				} else if (rank.innerText) { //otherwise just take positional text
+					small.innerText = rank.innerText.trim();
 				}
 				let newLink = link.getElementsByTagName("a")[0].cloneNode(true);
 				newLink.innerText = " " + score.innerText.trim().replace(/\n/g, "");
