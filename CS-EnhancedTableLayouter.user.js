@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		0.8.5
+// @version		0.8.6
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -131,7 +131,6 @@ GM_addStyle(
 		}
 		groupNames.push(groupName)
 
-
 		//c represents the current chart count of THIS group, so that we can skip an chart from the main group and stay synced
 		let charts = tables[i].getElementsByClassName("chart");
 		//charts is the array of existing charts for the selected group
@@ -157,6 +156,15 @@ GM_addStyle(
 			let link = chart.children[1];
 			let score = chart.children[2];
 			let chartName = link.innerText.trim();
+			//DLC charts have way too much whitespace around them, so handle that
+			if(chartName.substring(0,5) == "[DLC]") {
+				chartName = "[DLC] " + chartName.substring(5).trim();
+			}
+			//and Final Bar Line charts say "Final Fantasy" way too much
+			if(gameNum==3231) {
+				chartName = chartName.replace("Theatrhythm Final Fantasy","TFF").replace("Final Fantasy","FF").replace("Crystal Chronicles Remastered Edition","CCRE");
+			}
+
 			//we want to colour the hyperlink to the chart (which in this format is the score) according to the chart type
 			//to do this we look at the existing hyperlink and just yoink its styling
 			let linkColor = getComputedStyle(link.firstElementChild).color;
@@ -165,7 +173,12 @@ GM_addStyle(
 				//only set the chartName on the first group
 				chartNames[j] = chartName;
 				let nameNode = document.createElement("td");
-				nameNode.appendChild(document.createTextNode(link.innerText)); //link.innerText.replaceAll(/\s/g,"")
+				if(chartName.length > 50) {
+					nameNode.appendChild(document.createTextNode(chartName.substring(0,50)+"…"));
+					nameNode.title = chartName;
+				} else {
+					nameNode.appendChild(document.createTextNode(chartName));
+				}
 				tbody.children[j].appendChild(nameNode);
 			}
 
