@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		0.8.4
+// @version		0.8.5
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -11,6 +11,7 @@
 // @match		https://cyberscore.me.uk/game*/2911
 // @match		https://cyberscore.me.uk/game*/3089
 // @match		https://cyberscore.me.uk/game*/3228
+// @match		https://cyberscore.me.uk/game*/3231
 // @namespace	https://github.com/Sellyme/cyberscore-userscripts/
 // @homepageURL	https://github.com/Sellyme/cyberscore-userscripts/
 // @downloadURL	https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedTableLayouter.user.js
@@ -78,6 +79,11 @@ GM_addStyle(
 			groupStart = 6;
 			groupEnd = 10;
 			break;
+		case 3231: //Theatrhythm Final Bar Line
+			tables = document.getElementsByClassName("all");
+			groupStart = 2;
+			groupEnd = 36;
+			break;
 		default:
 			tables = document.getElementsByClassName("standard all");
 			groupStart = 0;
@@ -104,12 +110,24 @@ GM_addStyle(
 	let chartNames = [];
 	for(let i = groupStart; i < groupEnd; i++){
 		let groupName = tables[i].children[0].children[1].innerText;
-		if(gameNum==2911) {
-			//HyperRogue's group titles are too long, so shorten them.
+		//for games with long/redundant group names, shorten them
+		if(gameNum==2911) { //HyperRogue
 			groupName = groupName.replace("Treasure Collected by Land (","").replace(")","");
-		} else if (gameNum==3228) {
-			//Hades' group titles are also too long
+		} else if (gameNum==3089) { //Dustforce
+			groupName = groupName.replace("Fastest Time ","Time ").replace("SS Rank","SS");
+		} else if (gameNum==3228) { //Hades
 			groupName = groupName.replace("Permanent Record – ","");
+		} else if(gameNum==3231) { //Theatrhythm Final Bar Line
+			//Standard seems to be the main gamemode people use
+			//and until I implement multi-tables, we can't fit all of them on screen
+			//so for now we just won't render Simple or Pair groups
+			if(!groupName.includes("Standard")) {
+				continue;
+			}
+			groupName = groupName.replace("Score ","").replace("High ","").replace("Max ","").replace("Times ","");
+			groupName = groupName.replace("Basic","BA").replace("Expert","EX").replace("Ultimate","UL").replace("Supreme","SU");
+			//when implementing multi-tables, we need to move this into the table-wide header!
+			groupName = groupName.replace(" – Standard","");
 		}
 		groupNames.push(groupName)
 
@@ -206,13 +224,13 @@ GM_addStyle(
 	collapseCell.style.top = 0;
 	headerRow.appendChild(collapseCell);
 	//and then add the group names
-	for(let i = groupStart; i < groupEnd; i++){
+	for(let i = 0; i < groupNames.length; i++){
 		let th = document.createElement("th");
 		//more sticky header CSS
 		th.style.backgroundColor = "var(--color-standard)";
 		th.style.position = "sticky";
 		th.style.top = 0;
-		th.appendChild(document.createTextNode(groupNames[i-groupStart]));
+		th.appendChild(document.createTextNode(groupNames[i]));
 		headerRow.appendChild(th);
 	}
 	thead.appendChild(headerRow);
