@@ -81,11 +81,13 @@ GM_addStyle(
 			break;
 		case 3231: //Theatrhythm Final Bar Line
 			tables = document.getElementsByClassName("all");
+			headerText = "Standard Mode";
 			groupStart = 2;
 			groupEnd = 36;
 			break;
 		default:
 			tables = document.getElementsByClassName("standard all");
+			headerText = "Collapse";
 			groupStart = 0;
 			groupEnd = tables.length;
 	}
@@ -226,7 +228,7 @@ GM_addStyle(
 	//add a collapse button
 	let collapseCell = document.createElement("th");
 	let collapseLink = document.createElement("a");
-	collapseLink.innerText = "Collapse";
+	collapseLink.innerText = headerText;
 	collapseLink.href = "#";
 	collapseLink.onclick = function() {return toggleGroup(tbody)}; //part of CS's standard JS suite
 	collapseCell.appendChild(collapseLink);
