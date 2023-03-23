@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		0.9.9.1
+// @version		1.0.0
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -106,12 +106,22 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 			]
 			break;
 		case 2363: //Arcaea
-			groups = [{
-				tables: tables,
-				groupStart: 0,
-				groupEnd: 4,
-				tableID: 1,
-			}]
+			groups = [
+				{
+					tables: tables,
+					groupStart: 0,
+					groupEnd: 4,
+					tableID: 1,
+					tableName: "Scores",
+				},
+				{
+					tables: tables,
+					groupStart: 5,
+					groupEnd: 9,
+					tableID: 2,
+					tableName: "Song Packs",
+				}
+			]
 			break;
 		case 2785: //Pokémon Snap 2
 			tables = document.getElementsByClassName('standard all');
@@ -215,7 +225,9 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 		for(let i = groupStart; i < groupEnd; i++){
 			let groupName = tables[i].children[0].children[1].innerText;
 			//for games with long/redundant group names, shorten them
-			if(gameNum==2911) { //HyperRogue
+			if (gameNum==2363) { //Arcaea
+				groupName = groupName.replace("Song Packs – ","");
+			} else if(gameNum==2911) { //HyperRogue
 				groupName = groupName.replace("Treasure Collected by Land (","").replace(")","");
 			} else if (gameNum==3089) { //Dustforce
 				groupName = groupName.replace("Fastest Time ","Time ").replace("SS Rank","SS");
