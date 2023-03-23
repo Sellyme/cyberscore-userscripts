@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		0.9.9
+// @version		0.8.5
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -138,13 +138,31 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 			}]
 			break;
 		case 3231: //Theatrhythm Final Bar Line
-			groups = [{
-				tables: tables,
-				groupStart: 2,
-				groupEnd: 36,
-				tableID: 1,
-				tableName: "Standard Mode",
-			}]
+			//FBL has non-contiguous groups, so we have to pull in all of them and filter them based on name in the main loop body
+			//but note that some logic depends on groupStart actually being the first group, so that still has to be correctly set for each table
+			groups = [
+				{
+					tables: tables,
+					groupStart: 2,
+					groupEnd: 36,
+					tableID: 1,
+					tableName: "Standard Mode",
+				},
+				{
+					tables: tables,
+					groupStart: 3,
+					groupEnd: 36,
+					tableID: 2,
+					tableName: "Pair Mode",
+				},
+				{
+					tables: tables,
+					groupStart: 4,
+					groupEnd: 36,
+					tableID: 3,
+					tableName: "Simple Mode",
+				}
+			]
 			break;
 		default:
 			groups = [{
@@ -198,13 +216,13 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				//Standard seems to be the main gamemode people use
 				//and until I implement multi-tables, we can't fit all of them on screen
 				//so for now we just won't render Simple or Pair groups
-				if(!groupName.includes("Standard")) {
+				if(!groupName.includes(tableName.split(" ")[0])) {
 					continue;
 				}
 				groupName = groupName.replace("Score ","").replace("High ","").replace("Max ","").replace("Times ","");
 				groupName = groupName.replace("Basic","BA").replace("Expert","EX").replace("Ultimate","UL").replace("Supreme","SU");
 				//when implementing multi-tables, we need to move this into the table-wide header!
-				groupName = groupName.replace(" – Standard","");
+				groupName = groupName.replace(" – Standard","").replace(" – Pair","").replace(" – Simple","");
 			}
 			groupNames.push(groupName)
 
@@ -234,7 +252,14 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				let link = chart.children[1];
 				let score = chart.children[2];
 				let chartName = link.innerText.trim();
-				//DLC charts have way too much whitespace around them, so handle that
+				//DLC and MP charts have way too much whitespace around them, so handle that
+				//a chart can have both tags, in which case MP comes first. So strip that one first.
+				//note that the multiplayer handling only supports charts with 2-9 players
+				//if we ever need to support a game with a 10P+ chart, this will need to be replaced with regex
+				if(chartName[0] == "[" && chartName.substring(2,4) == "P]") {
+					//we don't care about including the multiplayer designation at all in the table layout
+					chartName = chartName.substring(5).trim();
+				}
 				if(chartName.substring(0,5) == "[DLC]") {
 					chartName = "[DLC] " + chartName.substring(5).trim();
 				}
