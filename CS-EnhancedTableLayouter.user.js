@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.0.0
+// @version		1.0.1
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -347,6 +347,11 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 		let headerRow = document.createElement("tr");
 		headerRow.classList.add("group");
 		headerRow.classList.add("standard");
+		//to stick the header row to the top of the table when scrolling we need some custom CSS, which we apply to each <th> cell
+		//(it'd be better to just inject a class CSS rule but this is fairly simple for now so it's probably okay)
+		headerRow.style.position = "sticky";
+		headerRow.style.top = 0;
+		headerRow.style.zIndex = 1;
 		//add a collapse button
 		let collapseCell = document.createElement("th");
 		let collapseLink = document.createElement("a");
@@ -354,19 +359,13 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 		collapseLink.href = "#";
 		collapseLink.onclick = function() {return toggleGroup(tbody)}; //part of CS's standard JS suite
 		collapseCell.appendChild(collapseLink);
-		//to stick the header row to the top of the table when scrolling we need some custom CSS, which we apply to each <th> cell
-		//(it'd be better to just inject a class CSS rule but this is fairly simple for now so it's probably okay)
 		collapseCell.style.backgroundColor = "var(--color-standard)"; //this colour name is part of the CS global libs
-		collapseCell.style.position = "sticky";
-		collapseCell.style.top = 0;
 		headerRow.appendChild(collapseCell);
 		//and then add the group names
 		for(let i = 0; i < groupNames.length; i++){
 			let th = document.createElement("th");
 			//more sticky header CSS
 			th.style.backgroundColor = "var(--color-standard)";
-			th.style.position = "sticky";
-			th.style.top = 0;
 			th.appendChild(document.createTextNode(groupNames[i]));
 			headerRow.appendChild(th);
 		}
