@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.0.2
+// @version		1.0.3
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -227,6 +227,11 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 			let row = document.createElement("tr");
 			row.classList.add("chart");
 			tbody.appendChild(row);
+		}
+
+		//PokeClicker's primary table (# Defeated) is the third in its list, so we need to reorder things to get it to work
+		if(gameNum==3279) {
+			tables.unshift(tables.splice(2,1)[0]);
 		}
 
 		let groupNames = [];
