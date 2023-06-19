@@ -13,6 +13,7 @@
 // @match		https://cyberscore.me.uk/game*/3089
 // @match		https://cyberscore.me.uk/game*/3228
 // @match		https://cyberscore.me.uk/game*/3231
+// @match		https://cyberscore.me.uk/game*/3279
 // @namespace	https://github.com/Sellyme/cyberscore-userscripts/
 // @homepageURL	https://github.com/Sellyme/cyberscore-userscripts/
 // @downloadURL	https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedTableLayouter.user.js
@@ -182,6 +183,14 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 					tableName: "Simple Mode",
 				}
 			]
+			break;
+		case 3279: //Pokéclicker
+			groups = [{
+				tables: tables,
+				groupStart: 1,
+				groupEnd: 6,
+				tableID: 1,
+			}]
 			break;
 		default:
 			groups = [{
