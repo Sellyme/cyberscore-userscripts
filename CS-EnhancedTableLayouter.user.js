@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.0.4
+// @version		1.0.5
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -14,6 +14,7 @@
 // @match		https://cyberscore.me.uk/game*/3228
 // @match		https://cyberscore.me.uk/game*/3231
 // @match		https://cyberscore.me.uk/game*/3279
+// @match		https://cyberscore.me.uk/game*/3284
 // @namespace	https://github.com/Sellyme/cyberscore-userscripts/
 // @homepageURL	https://github.com/Sellyme/cyberscore-userscripts/
 // @downloadURL	https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedTableLayouter.user.js
@@ -191,6 +192,22 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				groupEnd: 6,
 				tableID: 1,
 			}]
+			break;
+		case 3284: //Can't Live Without Electricity
+			groups = [{
+				tables: tables,
+				groupStart: 0,
+				groupEnd: 2,
+				tableID: 1,
+				tableName: "Square Grid",
+			},
+			{
+				tables: tables,
+				groupStart: 2,
+				groupEnd: 4,
+				tableID: 2,
+				tableName: "Hexagon Grid"
+			}];
 			break;
 		default:
 			groups = [{
