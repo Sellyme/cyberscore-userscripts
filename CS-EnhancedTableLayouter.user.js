@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.0.6.2
+// @version		1.0.6.3b
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -19,6 +19,7 @@
 // @match		https://cyberscore.me.uk/game*/3228
 // @match		https://cyberscore.me.uk/game*/3231
 // @match		https://cyberscore.me.uk/game*/3279
+// @match		https://cyberscore.me.uk/game*/3280
 // @match		https://cyberscore.me.uk/game*/3283
 // @match		https://cyberscore.me.uk/game*/3284
 // @namespace	https://github.com/Sellyme/cyberscore-userscripts/
@@ -202,6 +203,24 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				tableID: 1,
 			}]
 			break;
+		case 3280: //ChainBeeT
+			groups = [
+				{
+					tables: tables,
+					groupStart: 0,
+					groupEnd: 5,
+					tableID: 1,
+					tableName: "Songs",
+				},
+				{
+					tables: tables,
+					groupStart: 8,
+					groupEnd: tables.length,
+					tableID: 2,
+					tableName: "Courses",
+				}
+			];
+			break;
 		case 3284: //Can't Live Without Electricity
 			groups = [{
 				tables: tables,
@@ -288,7 +307,7 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				groupName = groupName.replace("Basic","BA").replace("Expert","EX").replace("Ultimate","UL").replace("Supreme","SU");
 				//when implementing multi-tables, we need to move this into the table-wide header!
 				groupName = groupName.replace(" – Standard","").replace(" – Pair","").replace(" – Simple","");
-			} else if(gameNum==3283) { //F1 2023
+			} else if(gameNum==3283) {
 				groupName = groupName.replace("Time Trial – ","");
 			}
 			groupNames.push(groupName)
