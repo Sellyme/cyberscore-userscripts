@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-Enhanced Charts
-// @version		0.4.0c
+// @version		0.4.1
 // @description	Add various extended functionality to Cyberscore chart pages
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/chart/*
@@ -125,17 +125,20 @@
 			}
 			//todo - right now we just ignore score2, since it's very rarely relevant
 
+			var score = {"type": "update", "time": sub.update_date, "score": sub.submission, "score2": sub.submission2, "history_id": sub.history_id, "comment": sub.comment};
 			//do any manual corrections that have been saved
 			if(sub.history_id in manualCorrections) {
 				var correction = manualCorrections[sub.history_id];
 				if(correction.type == "delete") {
+					//abandon the score object and move to next
 					continue;
+				} else if (correction.type == "keep") {
+					score.keep = true;
 				} else {
-					sub.submission = correction.fixedScore;
+					score.score = correction.fixedScore;
 				}
 			}
 
-			var score = {"type": "update", "time": sub.update_date, "score": sub.submission, "score2": sub.submission2, "history_id": sub.history_id, "comment": sub.comment};
 			users[user_id].scores.push(score);
 		}
 		//and now for each user we want to sort scores[] to go from oldest to newest
@@ -295,7 +298,8 @@
 				}
 
 				//basic sanity checking for historical scores
-				if(j < scores.length - 1) {
+				//(if the score is marked as an explicit keep, don't sanity check)
+				if(j < scores.length - 1 && !("keep" in scores[j])) {
 					//we can just ignore any score that lasted less than 60 seconds - probably a typo and won't really be visible anyway
 					var nextScore = scores[j+1];
 					var nextScore_utc = new Date(nextScore.time).getTime();
