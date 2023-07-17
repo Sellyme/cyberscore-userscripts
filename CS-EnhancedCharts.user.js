@@ -15,7 +15,7 @@
 	var chartData = {"users": {}};
 	buildUI();
 
-	var debug = true;
+	var debug = false;
 	var manualCorrections = {
 		//type change -  display the update as having the value of fixedScore instead of what was submitted (for use correcting obvious typos)
 		//type delete - completely ignore this record update (for use when "correct" score unknown")
