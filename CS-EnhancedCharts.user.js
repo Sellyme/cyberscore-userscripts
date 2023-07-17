@@ -113,8 +113,8 @@
 		for(var i = 0; i < subs.length; i++) {
 			var sub = subs[i];
 
-			//we only want first submissions ("f") and updates ("u"), ignore all other entries
-			if(sub.update_type !== "u" && sub.update_type !== "f") {
+			//we only want first submissions ("f"), updates ("u"), and staff edits ("e"), ignore all other entries
+			if(sub.update_type !== "u" && sub.update_type !== "f" && sub.update_type !== "e") {
 				continue;
 			}
 
