@@ -14,6 +14,7 @@
 // @match		https://cyberscore.me.uk/game*/1907
 // @match		https://cyberscore.me.uk/game*/2363
 // @match		https://cyberscore.me.uk/game*/2785
+// @match		https://cyberscore.me.uk/game*/2902
 // @match		https://cyberscore.me.uk/game*/2911
 // @match		https://cyberscore.me.uk/game*/3089
 // @match		https://cyberscore.me.uk/game*/3228
@@ -145,6 +146,22 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				tableID: 1,
 			}]
 			break;
+		case 2902: //Pokémon Let's Go: Pikachu/Eevee
+			groups = [
+				{
+					tables: tables,
+					groupStart: 0,
+					groupEnd: 6,
+					tableID: 1,
+				},
+				{
+					tables: tables,
+					groupStart: 7,
+					groupEnd: 9,
+					tableID: 2,
+				}
+			]
+			break;
 		case 2911: //HyperRogue
 			groups = [{
 				tables: tables,
@@ -256,11 +273,18 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 		let tableName = "tableName" in groups[t] ? groups[t].tableName : "Collapse";
 
 		//PokeClicker's primary table (# Defeated) is the third in its list, so we need to reorder things to get it to work
+
 		if(gameNum==3279) {
 			tables = Array.prototype.slice.call(tables);
 			var primarytable = tables[3]
 			tables.splice(3, 1);
 			tables.splice(1, 0, primarytable);
+		} else if (gameNum==2902 && t == 0) {
+			//the same is true of Pokemon Let's Go Pikachu/Eevee, but we need to rotate all six tables of the main sequence to the front
+			tables = Array.prototype.slice.call(tables);
+			tables.unshift(...tables.splice(1,6));
+			//and then rotate the four size charts to the front of that
+			tables.unshift(...tables.splice(2,4));
 		}
 
 		const chartCount = tables[groupStart].getElementsByClassName("chart").length;
