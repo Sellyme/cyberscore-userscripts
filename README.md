@@ -12,3 +12,7 @@ Adds a two-dimensional chart layout to certain games where there are multiple gr
 # EnhancedCharts
 Adds a button to the top of each chart that will display a graph showing each player's record improvements over time.
 ![image](https://user-images.githubusercontent.com/1928024/227390219-91117026-4d0c-47df-b048-bfd564e5dec0.png)
+
+# ChartHighlighter
+Provides a pre-fab list of options users can choose from to highlight charts on game pages based on certain heuristics. Useful for easily colour-coding charts you've already submitted, are already first in, or have met some standardised goal/target score. The example image below is configured to highlight all scores above 50, for which there is an in-game achievement.
+![image](https://github.com/Sellyme/cyberscore-userscripts/assets/1928024/cba85aaf-6e1a-4f6c-b25d-d34bbb0ae329)
