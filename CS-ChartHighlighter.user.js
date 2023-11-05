@@ -23,11 +23,12 @@ GM_addStyle(
 <div id="themeDiv">
 	<span>Highlight:</span>
 	<select id="themeSelect" class="borderRadius" onchange="changeTheme()">
-		<option value="first" selected>Firsts</option>
+		<option value="none" selected>None</option>
+		<option value="first">Firsts</option>
 		<option value="submitted">Submitted</option>
 	</select>
 </div>`;
-	var basestyle = "tr.first{background-color:rgb(17,81,17) !important;}";
+	var basestyle = "tr.none{background-color:rgb(17,81,17) !important;}";
 
 	function addStyle(style) {
 		var headEl = document.getElementsByTagName("head")[0];
@@ -41,7 +42,7 @@ GM_addStyle(
 	unsafeWindow.changeTheme = function() {
 		var style = basestyle;
 		var theme = document.getElementById('themeSelect').value;
-		style = style.replace("first",theme);
+		style = style.replace("none",theme);
 		var rules = document.getElementById('chartHighlightRules');
 		if (rules) {
 			rules.remove();
