@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-ChartHighlighter
-// @version		0.0.3
+// @version		0.1.0
 // @description	Highlights charts for certain games based on user-submitted heuristics (e.g., "ticking off" charts a user has maxed).
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/*
@@ -19,17 +19,7 @@ GM_addStyle(
 `
 );
 (function(){
-	var selectEl = `
-<div id="themeDiv">
-	<span>Highlight:</span>
-	<select id="themeSelect" class="borderRadius" onchange="changeTheme()">
-		<option value="none" selected>None</option>
-		<option value="first">Firsts</option>
-		<option value="submitted">Submitted</option>
-	</select>
-</div>`;
-	var basestyle = "tr.none{background-color:rgb(17,81,17) !important;}";
-
+	//define helper functions for changing the selected highlight preference
 	function addStyle(style) {
 		var headEl = document.getElementsByTagName("head")[0];
 		var styleEl = document.createElement("style");
@@ -38,8 +28,7 @@ GM_addStyle(
 		styleEl.appendChild(document.createTextNode(style));
 		headEl.appendChild(styleEl);
 	}
-
-	unsafeWindow.changeTheme = function() {
+	function changeTheme() {
 		var style = basestyle;
 		var theme = document.getElementById('themeSelect').value;
 		style = style.replace("none",theme);
@@ -49,12 +38,39 @@ GM_addStyle(
 		}
 		addStyle(style);
 	}
+	//helper function to add highlight options to DOM
+	function addCustomHighlight(value, desc, sel = null) {
+		let newOpt = document.createElement('option');
+		newOpt.value = value;
+		newOpt.innerText = desc;
+		if(!sel) {
+			sel = document.getElementById('themeSelect');
+		}
+		sel.appendChild(newOpt);
+	}
+
+	//build the highlight selector
+	var div = document.createElement('div');
+	div.id = "themeDiv";
+	var spanEl = document.createElement('span');
+	spanEl.innerText = "Highlight:";
+	div.appendChild(spanEl);
+	var selectEl = document.createElement('select');
+	selectEl.id = "themeSelect";
+	selectEl.classList.add('borderRadius');
+	selectEl.onchange = changeTheme;
+	addCustomHighlight("none","None",selectEl);
+	addCustomHighlight("first","Firsts",selectEl);
+	addCustomHighlight("submitted","Submitted",selectEl);
+	div.appendChild(selectEl);
+	var basestyle = "tr.none{background-color:rgb(17,81,17) !important;}";
 
 	//insert the selector
 	var pageleft = document.getElementById('pageleft');
-	pageleft.innerHTML = selectEl + pageleft.innerHTML;
+	pageleft.insertBefore(div, pageleft.firstChild);
 	addStyle(basestyle);
 
+	//individual game configs
 	function setupGame(gameNum) {
 		let tagFunction;
 		switch(gameNum) {
@@ -75,13 +91,7 @@ GM_addStyle(
 		}
 		return tagFunction;
 	}
-	function addCustomHighlight(value, desc) {
-		let newOpt = document.createElement('option');
-		newOpt.value = value;
-		newOpt.innerText = desc;
-		let sel = document.getElementById('themeSelect');
-		sel.appendChild(newOpt);
-	}
+
 
 	//this set of functions is called on any chart row if the user has a valid score on that chart
 	//the exact behaviour of how to tag it varies by game
