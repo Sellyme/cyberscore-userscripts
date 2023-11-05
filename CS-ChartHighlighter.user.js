@@ -12,20 +12,21 @@
 // ==/UserScript==
 GM_addStyle(
 `
-	#themeDiv {
-		float: right;
-		margin-right: 5px;
-	}
+#themeDiv {
+	float: right;
+	margin-right: 5px;
+}
 `
 );
 (function(){
-	var selectEl = `<div id="themeDiv">
-                        <span>Highlight:</span>
-						<select id="themeSelect" class="borderRadius" onchange="changeTheme()">
-                            <option value="first" selected>Firsts</option>
-                            <option value="submitted">Submitted</option>
-                        </select>
-                      </div>`;
+	var selectEl = `
+<div id="themeDiv">
+	<span>Highlight:</span>
+	<select id="themeSelect" class="borderRadius" onchange="changeTheme()">
+		<option value="first" selected>Firsts</option>
+		<option value="submitted">Submitted</option>
+	</select>
+</div>`;
 	var basestyle = "tr.first{background-color:rgb(17,81,17) !important;}";
 
 	function addStyle(style) {
