@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-ChartHighlighter
-// @version		0.0.1
+// @version		0.0.2
 // @description	Highlights charts for certain games based on user-submitted heuristics (e.g., "ticking off" charts a user has maxed).
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/*
@@ -55,12 +55,21 @@ GM_addStyle(
 	pageleft.innerHTML = selectEl + pageleft.innerHTML;
 	addStyle(basestyle);
 
-	function addCustomHighlights(gameNum) {
+	function setupGame(gameNum) {
+		let tagFunction;
 		switch(gameNum) {
 			case 3225:
+				tagFunction = tagMelvor;
 				addCustomHighlight("melvor99", "Melvor 99s/120s");
 				break;
+			case 3279:
+				tagFunction = tagPokeclicker;
+				addCustomHighlight("resisted", "EV Resisted")
+				break;
+			default:
+				tagFunction = tagGeneric;
 		}
+		return tagFunction;
 	}
 	function addCustomHighlight(value, desc) {
 		let newOpt = document.createElement('option');
@@ -73,20 +82,30 @@ GM_addStyle(
 	//this set of functions is called on any chart row if the user has a valid score on that chart
 	//the exact behaviour of how to tag it varies by game
 	//they receive the group name and chart row as arguments
-	function tagMelvor(gname, crow, userScore, firstScore) {
+	function tagMelvor(gname,crow,userScore,firstScore) {
 		tagGeneric(gname, crow, userScore, firstScore);
 		if(gname.includes(" XP")) {
 			let target = 13034431; //Level 99 Mastery
 			if(gname.includes("Skill")) {
 				target = 104273167; //Level 120 Skill
 			}
-			userScore = parseFloat(userScore);
+			userScore = parseInt(userScore);
 			if(userScore > target) {
 				crow.classList.add('melvor99');
 			}
 		}
 	}
-	function tagGeneric(gname, crow, userScore, firstScore) {
+	function tagPokeclicker(gname,crow,userScore,firstScore) {
+		tagGeneric(gname,crow,userScore,firstScore);
+		if(gname.includes("EVs")) {
+			let target = 50;
+			userScore = parseInt(userScore);
+			if(userScore >= target) {
+				crow.classList.add('resisted');
+			}
+		}
+	}
+	function tagGeneric(gname,crow,userScore,firstScore) {
 		crow.classList.add('submitted');
 		if(userScore == firstScore) {
 			crow.classList.add('first');
@@ -95,7 +114,7 @@ GM_addStyle(
 
 	const urlComponents = window.location.href.split("/")
 	const gameNum = parseInt(urlComponents[urlComponents.length - 1])
-	addCustomHighlights(gameNum);
+	let tagFunction = setupGame(gameNum);
 
 	let groups;
 		//skip any enhancedTableLayout tables
@@ -107,15 +126,6 @@ GM_addStyle(
 		let table = tables[t];
 		//get group name
 		let gname = table.firstElementChild.children[1].innerText.trim();
-		//add game specific checks out of the loop to optimise performance
-		let tagFunction;
-		switch(gameNum) {
-			case 3225:
-				tagFunction = tagMelvor;
-				break;
-			default:
-				tagFunction = tagGeneric;
-		}
 
 		//iterate over all row children of the table
 		for(var r = 1; r < table.children.length; r++) {
