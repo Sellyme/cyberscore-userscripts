@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-ChartHighlighter
-// @version		0.0.2
+// @version		0.0.3
 // @description	Highlights charts for certain games based on user-submitted heuristics (e.g., "ticking off" charts a user has maxed).
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/*
@@ -62,6 +62,10 @@ GM_addStyle(
 				tagFunction = tagMelvor;
 				addCustomHighlight("melvor99", "Melvor 99s/120s");
 				break;
+			case 3231:
+				tagFunction = tagFinalBarLine;
+				addCustomHighlight("maxed", "9,999,999s");
+				break;
 			case 3279:
 				tagFunction = tagPokeclicker;
 				addCustomHighlight("resisted", "EV Resisted")
@@ -83,7 +87,7 @@ GM_addStyle(
 	//the exact behaviour of how to tag it varies by game
 	//they receive the group name and chart row as arguments
 	function tagMelvor(gname,crow,userScore,firstScore) {
-		tagGeneric(gname, crow, userScore, firstScore);
+		tagGeneric(gname,crow,userScore,firstScore);
 		if(gname.includes(" XP")) {
 			let target = 13034431; //Level 99 Mastery
 			if(gname.includes("Skill")) {
@@ -92,6 +96,16 @@ GM_addStyle(
 			userScore = parseInt(userScore);
 			if(userScore > target) {
 				crow.classList.add('melvor99');
+			}
+		}
+	}
+	function tagFinalBarLine(gname,crow,userScore,firstScore) {
+		tagGeneric(gname,crow,userScore,firstScore);
+		if(gname.includes("High Score")) {
+			let target = 9999999;
+			userScore = parseInt(userScore);
+			if(userScore==target) {
+				crow.classList.add('maxed');
 			}
 		}
 	}
