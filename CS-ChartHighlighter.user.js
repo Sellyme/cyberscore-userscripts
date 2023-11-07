@@ -110,6 +110,14 @@ GM_addStyle(
 	function setupGame(gameNum, loadValue) {
 		let tagFunction;
 		switch(gameNum) {
+			case 1121: //Theatrhythm FF
+			case 1509: //Curtain Call
+			case 2779: //KH: Melody of Memory
+			case 2893: //Dragon Quest
+			case 3231: //Final Bar Line
+				tagFunction = tagTheatrhythm;
+				addCustomHighlight("maxed", "9,999,999s", loadValue);
+				break;
 			case 2836:
 				tagFunction = tagDJMAX;
 				addCustomHighlight("maxrate", "100% Rate", loadValue);
@@ -127,10 +135,6 @@ GM_addStyle(
 			case 3225:
 				tagFunction = tagMelvor;
 				addCustomHighlight("melvor99", "Melvor 99s/120s", loadValue);
-				break;
-			case 3231:
-				tagFunction = tagFinalBarLine;
-				addCustomHighlight("maxed", "9,999,999s", loadValue);
 				break;
 			case 3279:
 				tagFunction = tagPokeclicker;
@@ -181,10 +185,16 @@ GM_addStyle(
 			}
 		}
 	}
-	function tagFinalBarLine(gname,crow,userScore,firstScore) {
+	function tagTheatrhythm(gname,crow,userScore,firstScore,gameNum) {
 		tagGeneric(gname,crow,userScore,firstScore);
-		if(gname.includes("High Score")) {
+		if(
+			((gameNum == 3231 || gameNum == 1121 || gameNum == 2779) && gname.includes("High Score")) || //Final Bar Line + Theatrhythm Final Fantasy + KH: Melody of Memory
+			gameNum == 2893 || gameNum == 1509 //Dragon Quest + Curtain Call + KH: Melody of Memory
+		) {
 			let target = 9999999;
+			if(gameNum = 2779 && gname.includes("Co-op")) {
+			   target = 19999998;
+			}
 			userScore = parseInt(userScore);
 			if(userScore==target) {
 				crow.classList.add('maxed');
@@ -229,11 +239,17 @@ GM_addStyle(
 			let scoreCell = crow.children[2];
 			let scores = scoreCell.innerText.split(" /");
 			let userScore = scores[0].trim().replaceAll(",","");
-			let firstScore = scores[1].trim().replaceAll(",","");
+			//if there's a "/" character in the chart suffix or it's a dual-sub chart, the primary submission will be the penultimate in the arrow
+			//otherwise it will be at index 1
+			let firstIdx = 1;
+			if(scores.length > 2) {
+				firstIdx = scores.length-2;
+			}
+			let firstScore = scores[firstIdx].trim().replaceAll(",","");
 			//check for missing scores
 			if(userScore != "-") {
 				//users has submitted a score, so add submitted class
-				tagFunction(gname, crow, userScore, firstScore);
+				tagFunction(gname, crow, userScore, firstScore, gameNum); //gameNum only parsed by multi-purpose functions
 			}
 		}
 	}
