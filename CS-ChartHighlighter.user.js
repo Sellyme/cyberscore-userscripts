@@ -139,7 +139,7 @@ GM_addStyle(
 				target = 104273167; //Level 120 Skill
 			}
 			userScore = parseInt(userScore);
-			if(userScore > target) {
+			if(userScore >= target) {
 				crow.classList.add('melvor99');
 			}
 		}
