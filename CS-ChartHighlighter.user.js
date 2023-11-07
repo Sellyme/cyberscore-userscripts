@@ -110,6 +110,16 @@ GM_addStyle(
 	function setupGame(gameNum, loadValue) {
 		let tagFunction;
 		switch(gameNum) {
+			case 2871: //osrs
+				tagFunction = tagRuneScape;
+				addCustomHighlight("rs99", "99 Skills", loadValue);
+				addCustomHighlight("rs200", "200m Skills", loadValue);
+				break;
+			case 2885: //rs3
+				tagFunction = tagRuneScape;
+				addCustomHighlight("rs99", "99 Skills", loadValue);
+				addCustomHighlight("rs200", "200m Skills", loadValue);
+				break;
 			case 3225:
 				tagFunction = tagMelvor;
 				addCustomHighlight("melvor99", "Melvor 99s/120s", loadValue);
@@ -131,6 +141,20 @@ GM_addStyle(
 	//this set of functions is called on any chart row if the user has a valid score on that chart
 	//the exact behaviour of how to tag it varies by game
 	//they receive the group name and chart row as arguments
+	function tagRuneScape(gname,crow,userScore,firstScore) {
+		tagGeneric(gname,crow,userScore,firstScore);
+		if(gname.includes("Skill experience")) {
+			let target = 13034431;
+			let target2 = 200000000
+			userScore = parseInt(userScore);
+			if(userScore >= target) {
+				crow.classList.add('rs99');
+				if(userScore >= target2) {
+					crow.classList.add('rs200');
+				}
+			}
+		}
+	}
 	function tagMelvor(gname,crow,userScore,firstScore) {
 		tagGeneric(gname,crow,userScore,firstScore);
 		if(gname.includes(" XP")) {
