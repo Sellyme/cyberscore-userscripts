@@ -138,7 +138,7 @@ GM_addStyle(
 				break;
 			case 3279:
 				tagFunction = tagPokeclicker;
-				addCustomHighlight("resisted", "EV Resisted", loadValue)
+				addCustomHighlight("completed", "Completed", loadValue);
 				break;
 			default:
 				tagFunction = tagGeneric;
@@ -203,11 +203,20 @@ GM_addStyle(
 	}
 	function tagPokeclicker(gname,crow,userScore,firstScore) {
 		tagGeneric(gname,crow,userScore,firstScore);
+		let target = false;
 		if(gname.includes("EVs")) {
-			let target = 50;
+			target = 50;
+		} else if(gname.includes("Routes")) {
+			target = 10000;
+		} else if(gname.includes("Gyms")) {
+			target = 1000;
+		} else if (gname.includes("Dungeons")) {
+			target = 500;
+		}
+		if(target) {
 			userScore = parseInt(userScore);
 			if(userScore >= target) {
-				crow.classList.add('resisted');
+				crow.classList.add('completed');
 			}
 		}
 	}
