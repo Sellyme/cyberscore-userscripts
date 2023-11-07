@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-ChartHighlighter
-// @version		0.1.0
+// @version		0.1.1
 // @description	Highlights charts for certain games based on user-submitted heuristics (e.g., "ticking off" charts a user has maxed).
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/*
