@@ -110,6 +110,10 @@ GM_addStyle(
 	function setupGame(gameNum, loadValue) {
 		let tagFunction;
 		switch(gameNum) {
+			case 2836:
+				tagFunction = tagDJMAX;
+				addCustomHighlight("maxrate", "100% Rate", loadValue);
+				break;
 			case 2871: //osrs
 				tagFunction = tagRuneScape;
 				addCustomHighlight("rs99", "99 Skills", loadValue);
@@ -141,6 +145,15 @@ GM_addStyle(
 	//this set of functions is called on any chart row if the user has a valid score on that chart
 	//the exact behaviour of how to tag it varies by game
 	//they receive the group name and chart row as arguments
+	function tagDJMAX(gname,crow,userScore,firstScore) {
+		tagGeneric(gname,crow,userScore,firstScore);
+		if(gname.includes("Best Rate")) {
+			let target = "100%";
+			if(userScore == target) {
+				crow.classList.add('maxrate');
+			}
+		}
+	}
 	function tagRuneScape(gname,crow,userScore,firstScore) {
 		tagGeneric(gname,crow,userScore,firstScore);
 		if(gname.includes("Skill experience")) {
