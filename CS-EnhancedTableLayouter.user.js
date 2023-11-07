@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.0.8
+// @version		1.0.9
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -297,7 +297,7 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 		thead.classList.add("standard", "all");
 		tbody.setAttribute("data-groupid", tableID); //also add a custom groupID so the collapse remembering will work
 		tbody.classList.add("standard", "all", "collapsed"); //start collapsed by default, uncollapse based on localStorage
-		loadState(tbody); //calls native CS function to uncollapse if needed
+		unsafeWindow.loadState(tbody); //calls native CS function to uncollapse if needed
 		table.appendChild(thead);
 		//and start building the body
 		table.appendChild(tbody);
@@ -447,7 +447,7 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 		let collapseLink = document.createElement("a");
 		collapseLink.innerText = tableName;
 		collapseLink.href = "#";
-		collapseLink.onclick = function() {return toggleGroup(tbody)}; //part of CS's standard JS suite
+		collapseLink.onclick = function() {return unsafeWindow.toggleGroup(tbody)}; //part of CS's standard JS suite
 		collapseCell.appendChild(collapseLink);
 		collapseCell.style.backgroundColor = "var(--color-standard)"; //this colour name is part of the CS global libs
 		headerRow.appendChild(collapseCell);
