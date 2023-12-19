@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.0.9
+// @version		1.0.9a
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -13,6 +13,7 @@
 // @match		https://cyberscore.me.uk/game*/2125
 // @match		https://cyberscore.me.uk/game*/1907
 // @match		https://cyberscore.me.uk/game*/2363
+// @match		https://cyberscore.me.uk/game*/2584
 // @match		https://cyberscore.me.uk/game*/2785
 // @match		https://cyberscore.me.uk/game*/2902
 // @match		https://cyberscore.me.uk/game*/2911
@@ -136,6 +137,14 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 					tableName: "Song Packs",
 				}
 			]
+			break;
+		case 2584: //Bloons 6
+			groups = [{
+				tables: tables,
+				groupStart: 0,
+				groupEnd: 13,
+				tableID: 1,
+			}]
 			break;
 		case 2785: //Pokémon Snap 2
 			tables = document.getElementsByClassName('standard all');
@@ -315,6 +324,8 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 			//for games with long/redundant group names, shorten them
 			if (gameNum==2363) { //Arcaea
 				groupName = groupName.replace("Song Packs – ","");
+			} else if (gameNum==2584) {
+				groupName = groupName.replace("Highest Round – ","");
 			} else if(gameNum==2911) { //HyperRogue
 				groupName = groupName.replace("Treasure Collected by Land (","").replace(")","");
 			} else if (gameNum==3089) { //Dustforce
@@ -425,6 +436,13 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 					}
 					let newLink = link.getElementsByTagName("a")[0].cloneNode(true);
 					newLink.innerText = " " + score.innerText.trim().replace(/\n/g, "");
+
+					//handle repetitive prefixes/suffixes
+					if(gameNum==2584) { //Bloons 6
+						newLink.innerText = newLink.innerText.replaceAll(" Rounds","");
+					}
+
+
 					newLink.style.color = linkColor;
 					td.appendChild(newLink);
 					tbody.children[j].appendChild(td);
