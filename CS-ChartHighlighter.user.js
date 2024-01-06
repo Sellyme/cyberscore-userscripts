@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-ChartHighlighter
-// @version		0.1.1
+// @version		0.2.0
 // @description	Highlights charts for certain games based on user-submitted heuristics (e.g., "ticking off" charts a user has maxed).
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/*
@@ -15,6 +15,10 @@ GM_addStyle(
 #highlightDiv {
 	float: right;
 	margin-right: 5px;
+}
+
+#dlcDiv {
+
 }
 `
 );
@@ -39,6 +43,15 @@ GM_addStyle(
 			window.localStorage.removeItem("highlight-"+gameNum);
 		} else {
 			window.localStorage.setItem("highlight-"+gameNum, value);
+		}
+	}
+	function saveDLC(value) {
+		const urlComponents = window.location.href.split("/")
+		const gameNum = parseInt(urlComponents[urlComponents.length - 1])
+		if(value == "show") { //for default
+			window.localStorage.removeItem("dlc-"+gameNum);
+		} else {
+			window.localStorage.setItem("dlc-"+gameNum, value);
 		}
 	}
 	function applyHighlight(save=true) { //pass in false to avoid saving this value for future use
@@ -79,32 +92,80 @@ GM_addStyle(
 		{"value": "submitted", "desc": "Submitted"},
 	]
 
+	function toggleDLC() {
+		let btn = document.getElementById('dlcBtn');
+		let dlcStyle;
+		saveDLC(btn.dataset.action);
+
+		if (btn.dataset.action == "hide") {
+			btn.dataset.action = "show";
+			dlcStyle = "display: none";
+			btn.innerText = "Show DLC";
+		} else {
+			btn.dataset.action = "hide";
+			dlcStyle = "";
+			btn.innerText = "Hide DLC";
+		}
+
+		writeDLCStyle(dlcStyle)
+	}
+	function writeDLCStyle(style) {
+		let charts = document.getElementsByClassName('chart')
+		for(var i = 0; i < charts.length; i++) {
+			if(charts[i].children[1].innerText.includes("DLC")) {
+				charts[i].style = style;
+			}
+		}
+	}
+
 	//build the highlight selector
-	var div = document.createElement('div');
-	div.id = "highlightDiv";
+	var hDiv = document.createElement('div');
+	hDiv.id = "highlightDiv";
 	var spanEl = document.createElement('span');
 	spanEl.innerText = "Highlight:";
-	div.appendChild(spanEl);
+	hDiv.appendChild(spanEl);
 	var selectEl = document.createElement('select');
 	selectEl.id = "highlightSelect";
 	selectEl.classList.add('borderRadius');
 	selectEl.onchange = applyHighlight;
 	//load whatever preset highlight exists, if any
-	let savedValue = window.localStorage.getItem("highlight-"+gameNum);
-	let defaultValue = window.localStorage.getItem("highlight-default"); //currently unimplemented, be careful when implementing not to let default selections write game-specific ones unnecessarily
-	let loadValue = savedValue || defaultValue || "none"; //default to "none"
+	let hlSavedValue = window.localStorage.getItem("highlight-"+gameNum);
+	let hlDefaultValue = window.localStorage.getItem("highlight-default"); //currently unimplemented, be careful when implementing not to let default selections write game-specific ones unnecessarily
+	let hlLoadValue = hlSavedValue || hlDefaultValue || "none"; //default to "none"
 
 	for(var i = 0; i < highlights.length; i++) {
 		let highlight = highlights[i];
 		let selected =
-		addCustomHighlight(highlight.value, highlight.desc, loadValue, selectEl);
+		addCustomHighlight(highlight.value, highlight.desc, hlLoadValue, selectEl);
 	}
 
-	div.appendChild(selectEl);
+	hDiv.appendChild(selectEl);
 
 	//insert the selector
 	var pageleft = document.getElementById('pageleft');
-	pageleft.insertBefore(div, pageleft.firstChild);
+	pageleft.insertBefore(hDiv, pageleft.firstChild);
+
+	//build the DLC Selector
+	var dlcBtn = document.createElement('button');
+	dlcBtn.id = "dlcBtn";
+	dlcBtn.classList.add('btn-game', 'btn-game--unranked');
+	dlcBtn.onclick = toggleDLC;
+	//load whatever preset display exists, if any
+	let dlcSavedValue = window.localStorage.getItem("dlc-"+gameNum);
+	let dlcLoadValue = dlcSavedValue || "show";
+
+	if(dlcLoadValue == "show") {
+		dlcBtn.innerText = "Hide DLC";
+		dlcBtn.dataset.action = "hide";
+	} else {
+		dlcBtn.innerText = "Show DLC";
+		dlcBtn.dataset.action = "show";
+		writeDLCStyle("display: none;");
+	}
+
+	//insert DLC selector. Easiest way of doing this is to insert before the first <br> element in pageleft
+	let target = pageleft.getElementsByClassName('gamelist')[0]
+	pageleft.insertBefore(dlcBtn, target);
 
 	//individual game configs
 	function setupGame(gameNum, loadValue) {
@@ -228,7 +289,7 @@ GM_addStyle(
 	}
 
 	//add in any game-specific highlights, set up the checking function to iterate, and apply the <style>
-	let tagFunction = setupGame(gameNum, loadValue);
+	let tagFunction = setupGame(gameNum, hlLoadValue);
 	applyHighlight(false); //we've just read the saved config out of localStorage, so no need to save it back
 
 	let groups;
