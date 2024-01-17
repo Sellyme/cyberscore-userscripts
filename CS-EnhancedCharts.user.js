@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-Enhanced Charts
-// @version		0.4.1
+// @version		0.4.2
 // @description	Add various extended functionality to Cyberscore chart pages
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/chart/*
@@ -454,6 +454,6 @@
 			"#BF5650", "#E83000", "#66796D", "#DA007C", "#FF1A59", "#8ADBB4", "#1E0200", "#5B4E51",
 			"#C895C5", "#320033", "#FF6832", "#66E1D3", "#CFCDAC", "#D0AC94", "#7ED379", "#012C58"
 		]
-		return colours[n];
+		return colours[n%128];
 	}
 })();
