@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.0.9a
+// @version		1.0.10
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -15,6 +15,7 @@
 // @match		https://cyberscore.me.uk/game*/2363
 // @match		https://cyberscore.me.uk/game*/2584
 // @match		https://cyberscore.me.uk/game*/2785
+// @match		https://cyberscore.me.uk/game*/2802
 // @match		https://cyberscore.me.uk/game*/2902
 // @match		https://cyberscore.me.uk/game*/2911
 // @match		https://cyberscore.me.uk/game*/3089
@@ -120,7 +121,7 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				},
 			]
 			break;
-		case 2363: //Arcaea
+		case 2363: //Arcaea (Mobile)
 			groups = [
 				{
 					tables: tables,
@@ -131,8 +132,8 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				},
 				{
 					tables: tables,
-					groupStart: 5,
-					groupEnd: 9,
+					groupStart: 6,
+					groupEnd: 10,
 					tableID: 2,
 					tableName: "Song Packs",
 				}
@@ -154,6 +155,32 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				groupEnd: 5,
 				tableID: 1,
 			}]
+			break;
+		case 2802: //Arcaea (Switch)
+			tables = tables;
+			groups = [
+				{
+					tables: tables,
+					groupStart: 0,
+					groupEnd: 4,
+					tableID: 1,
+					tableName: "Joy-Con Controls",
+				},
+				{
+					tables: tables,
+					groupStart: 8,
+					groupEnd: 12,
+					tableID: 2,
+					tableName: "Touch Controls",
+				},
+				{
+					tables: document.getElementsByClassName('collectible all'),
+					groupStart: 0,
+					groupEnd: 6,
+					tableID: 3,
+					tableName: "Song Packs",
+				},
+			]
 			break;
 		case 2902: //Pokémon Let's Go: Pikachu/Eevee
 			groups = [
@@ -322,8 +349,12 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 		for(let i = groupStart; i < groupEnd; i++){
 			let groupName = tables[i].children[0].children[1].innerText;
 			//for games with long/redundant group names, shorten them
-			if (gameNum==2363) { //Arcaea
+			if (gameNum==2363 || gameNum==2802) { //Arcaea
 				groupName = groupName.replace("Song Packs – ","");
+				groupName = groupName.replace(" Controls","");
+				if (groups[t].tableID != 3 && gameNum==2802) {
+					groupName = groupName.replace(" (Joy-Con)","").replace(" (Touch)","");
+				}
 			} else if (gameNum==2584) {
 				groupName = groupName.replace("Highest Round – ","");
 			} else if(gameNum==2911) { //HyperRogue
@@ -394,6 +425,42 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				//to do this we look at the existing hyperlink and just yoink its styling
 				let linkColor = getComputedStyle(link.firstElementChild).color;
 
+				//we need some special handling for Extreme Road Trip 2
+				if(gameNum==1419) {
+					//for most groups the chart for your best score independent of vehicle is named "Overall"
+					//however in Best 2K, Best 5K, and Best 10K the chart is named "Any Vehicle"
+					//so we just force those two strings to match each other
+					//(we can do this after setting chartNames[] since the first occurence is at i=8)
+					if(chartName == "Any Vehicle") {
+						chartName = "Overall";
+					}
+				}
+				//special handling for Arcaea
+				if(gameNum==2363 || gameNum==2802) {
+					//the Tutorial chart only exists for the first two difficulties, and is differently named for each
+					//we can just merge them
+					if(chartName == "Advanced Tutorial" || chartName == "Basic Tutorial") {
+						chartName = "Tutorial";
+					}
+					//some Beyond charts have special names that need to be converted
+					if(chartName == "PRAGMATISM -RESURRECTION-") {
+						chartName = "PRAGMATISM";
+					} else if (chartName == "Ignotus Afterburn") {
+						chartName = "Ignotus";
+					} else if (chartName == "Red and Blue and Green") {
+						chartName = "Red and Blue";
+					} else if (chartName == "Singularity VVVIP") {
+						chartName = "Singularity";
+					} else if (chartName == "overdead.") {
+						chartName = "dropdead";
+					} else if (chartName == "Last | Moment" || chartName == "Last | Eternity") {
+						//because this is two charts mapping to the same easier difficulty chart, we can't just remap them
+						//so we don't bother printing them at all
+						//but that means we also have to increment the chart counter in the Beyond group to move on from them
+						c++;
+					}
+				}
+
 				if(i == groupStart){
 					//only set the chartName on the first group
 					chartNames[j] = chartName;
@@ -405,17 +472,6 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 						nameNode.appendChild(document.createTextNode(chartName));
 					}
 					tbody.children[j].appendChild(nameNode);
-				}
-
-				//we need some special handling for Extreme Road Trip 2
-				if(gameNum==1419) {
-					//for most groups the chart for your best score independent of vehicle is named "Overall"
-					//however in Best 2K, Best 5K, and Best 10K the chart is named "Any Vehicle"
-					//so we just force those two strings to match each other
-					//(we can do this after setting chartNames[] since the first occurence is at i=8)
-					if(chartName == "Any Vehicle") {
-						chartName = "Overall";
-					}
 				}
 
 				//if we don't match the chart name from the primary group, leave this cell blank
@@ -441,7 +497,6 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 					if(gameNum==2584) { //Bloons 6
 						newLink.innerText = newLink.innerText.replaceAll(" Rounds","");
 					}
-
 
 					newLink.style.color = linkColor;
 					td.appendChild(newLink);
