@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-ChartHighlighter
-// @version		0.2.0
+// @version		0.2.1
 // @description	Highlights charts for certain games based on user-submitted heuristics (e.g., "ticking off" charts a user has maxed).
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/*
@@ -316,6 +316,12 @@ GM_addStyle(
 				firstIdx = scores.length-2;
 			}
 			let firstScore = scores[firstIdx].trim().replaceAll(",","");
+			//Words Crush specifically has the meaningful score as the *secondary* item, so we need a manual override for it
+			//(TODO - delete this handling when we eventually fix that abomination of a chart setup)
+			if(gameNum == 2187) {
+				userScore = scores[1].trim().replaceAll(",","");
+				firstScore = scores[3].trim().replaceAll(",","");
+			}
 			//check for missing scores
 			if(userScore != "-") {
 				//users has submitted a score, so add submitted class
