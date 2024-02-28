@@ -236,14 +236,14 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				{
 					tables: tables,
 					groupStart: 3,
-					groupEnd: 36,
+					groupEnd: 37,
 					tableID: 2,
 					tableName: "Pair Mode",
 				},
 				{
 					tables: tables,
 					groupStart: 4,
-					groupEnd: 36,
+					groupEnd: 38,
 					tableID: 3,
 					tableName: "Simple Mode",
 				}
