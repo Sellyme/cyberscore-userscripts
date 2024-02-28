@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.0.10
+// @version		1.0.11
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -476,7 +476,7 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 
 				//if we don't match the chart name from the primary group, leave this cell blank
 				//note that this means every single chart in any group MUST be in the groupStart group, in order
-				if(chartName != chartNames[j]) {
+				if(chartName.replace("[DLC] ","") != chartNames[j].replace("[DLC] ","")) {
 					//console.log("Skipping chart '" + chartNames[j] + "' as it doesn't match next chart '" + chartName + "'");
 					tbody.children[j].appendChild(td);
 				} else {
