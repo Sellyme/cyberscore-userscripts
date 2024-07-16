@@ -309,7 +309,7 @@ GM_addStyle(
 			let scoreCell = crow.children[2];
 			let scores = scoreCell.innerText.split(" /");
 			let userScore = scores[0].trim().replaceAll(",","");
-			//if there's a "/" character in the chart suffix or it's a dual-sub chart, the primary submission will be the penultimate in the arrow
+			//if there's a "/" character in the chart suffix or it's a dual-sub chart, the primary submission will be the penultimate in the array
 			//otherwise it will be at index 1
 			let firstIdx = 1;
 			if(scores.length > 2) {
