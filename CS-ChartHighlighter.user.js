@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-ChartHighlighter
-// @version		0.2.1
+// @version		0.2.2
 // @description	Highlights charts for certain games based on user-submitted heuristics (e.g., "ticking off" charts a user has maxed).
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/*
@@ -142,8 +142,8 @@ GM_addStyle(
 	hDiv.appendChild(selectEl);
 
 	//insert the selector
-	var pageleft = document.getElementById('pageleft');
-	pageleft.insertBefore(hDiv, pageleft.firstChild);
+	var mainContent = document.getElementsByClassName("layout--content-primary")[0];
+	mainContent.insertBefore(hDiv, mainContent.firstChild);
 
 	//build the DLC Selector
 	var dlcBtn = document.createElement('button');
@@ -163,9 +163,9 @@ GM_addStyle(
 		writeDLCStyle("display: none;");
 	}
 
-	//insert DLC selector. Easiest way of doing this is to insert before the first <br> element in pageleft
-	let target = pageleft.getElementsByClassName('gamelist')[0]
-	pageleft.insertBefore(dlcBtn, target);
+	//insert DLC selector. Easiest way of doing this is to insert before the first <br> element in the main content pane
+	let target = mainContent.getElementsByClassName('gamelist')[0]
+	mainContent.insertBefore(dlcBtn, target);
 
 	//individual game configs
 	function setupGame(gameNum, loadValue) {
