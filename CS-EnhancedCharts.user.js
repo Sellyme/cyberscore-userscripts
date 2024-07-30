@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name		CS-Enhanced Charts
-// @version		0.4.2
+// @version		0.4.3
 // @description	Add various extended functionality to Cyberscore chart pages
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/chart/*
+// @match		https://cyberscore.me.uk/charts/*
 // @namespace	https://github.com/Sellyme/cyberscore-userscripts/
 // @homepageURL	https://github.com/Sellyme/cyberscore-userscripts/
 // @downloadURL	https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedCharts.user.js
