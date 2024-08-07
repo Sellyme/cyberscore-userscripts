@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name		CS-ChartHighlighter
-// @version		0.2.2
+// @version		0.2.3
 // @description	Highlights charts for certain games based on user-submitted heuristics (e.g., "ticking off" charts a user has maxed).
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/*
+// @exclude		https://cyberscore.me.uk/game-*
+// @exclude		https://cyberscore.me.uk/game_*
 // @namespace	https://github.com/Sellyme/cyberscore-userscripts/
 // @homepageURL	https://github.com/Sellyme/cyberscore-userscripts/
 // @downloadURL	https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-ChartHighlighter.user.js
@@ -293,7 +295,7 @@ GM_addStyle(
 	applyHighlight(false); //we've just read the saved config out of localStorage, so no need to save it back
 
 	let groups;
-		//skip any enhancedTableLayout tables
+	//skip any enhancedTableLayout tables
 	let masterTable = document.querySelectorAll('.gamelist:not(.enhancedTable)')[0];
 	let tables = masterTable.getElementsByClassName('all'); //default, override as needed
 
