@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.1.1
+// @version		1.1.2
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -41,7 +41,7 @@ GM_addStyle(
 		position: relative;
 	}
 	.enhancedTable tr:hover {
-    	   background-color: #ccc;
+		background-color: #ccc;
 	}
 `
 );
@@ -516,12 +516,13 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 		//(it'd be better to just inject a class CSS rule but this is fairly simple for now so it's probably okay)
 		headerRow.style.position = "sticky";
 		headerRow.style.top = 0;
-		headerRow.style.zIndex = 1;
+		//headerRow.style.zIndex = 1; //sticky positioning isn't working at the moment and this clashed with the search box anyway so it's disabled for now
 		//add a collapse button
 		let collapseCell = document.createElement("th");
 		let collapseLink = document.createElement("a");
 		collapseLink.innerText = tableName;
 		collapseLink.href = "#";
+		collapseLink.style.color = "#84b5e0";
 		collapseLink.onclick = function() {return unsafeWindow.toggleGroup(tbody)}; //part of CS's standard JS suite
 		collapseCell.appendChild(collapseLink);
 		collapseCell.style.backgroundColor = "var(--color-standard)"; //this colour name is part of the CS global libs
