@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-ChartHighlighter
-// @version		0.2.3
+// @version		0.2.4
 // @description	Highlights charts for certain games based on user-submitted heuristics (e.g., "ticking off" charts a user has maxed).
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/*
@@ -128,7 +128,7 @@ GM_addStyle(
 	hDiv.appendChild(spanEl);
 	var selectEl = document.createElement('select');
 	selectEl.id = "highlightSelect";
-	selectEl.classList.add('borderRadius');
+	//selectEl.classList.add('borderRadius'); //the language select button next to it (on games with translations) doesn't have a border radius so it looks out of place to have one
 	selectEl.onchange = applyHighlight;
 	//load whatever preset highlight exists, if any
 	let hlSavedValue = window.localStorage.getItem("highlight-"+gameNum);
@@ -144,8 +144,8 @@ GM_addStyle(
 	hDiv.appendChild(selectEl);
 
 	//insert the selector
-	var mainContent = document.getElementsByClassName("layout--content-primary")[0];
-	mainContent.insertBefore(hDiv, mainContent.firstChild);
+	var breadCrumbDiv = document.getElementById("breadcrumb");
+	breadCrumbDiv.appendChild(hDiv);
 
 	//build the DLC Selector
 	var dlcBtn = document.createElement('button');
@@ -166,6 +166,7 @@ GM_addStyle(
 	}
 
 	//insert DLC selector. Easiest way of doing this is to insert before the first <br> element in the main content pane
+	var mainContent = document.getElementsByClassName("layout--content-primary")[0];
 	let target = mainContent.getElementsByClassName('gamelist')[0]
 	mainContent.insertBefore(dlcBtn, target);
 
