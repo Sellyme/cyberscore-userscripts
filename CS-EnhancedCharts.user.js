@@ -25,6 +25,10 @@
 		4015113: {"type": "change", "fixedScore": 5253104}, //One in a Trillion - Taps (c:594040)
 		4015114: {"type": "delete"}, //One in a Trillion - Taps + Gem Pops (c:594039)
 		3994829: {"type": "change", "fixedScore": 13040}, //One in a Trillion - Total eggs found (c:594042)
+		5453729: {"type": "delete"}, 5532688: {"type": "delete"}, 5457127: {"type": "delete"}, 5712707: {"type": "delete"}, 5455163: {"type": "delete"}, //Melvor Successful Cooks autosub errors (c:645533)
+		5566817: {"type": "delete"}, 5625977: {"type": "delete"}, 5683630: {"type": "delete"}, 5701447: {"type": "delete"}, 5707609: {"type": "delete"}, //more Melvor Successful Cooks
+		5468935: {"type": "delete"}, 5470780: {"type": "delete"}, 5463854: {"type": "delete"}, 5464635: {"type": "delete"}, 5590431: {"type": "delete"}, //yet more Melvor Successful Cooks
+
 	};
 
 	async function buildUI() {
