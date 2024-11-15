@@ -27,5 +27,6 @@
 	var submitBtn = document.getElementById("contentcontainer").getElementsByTagName("input")[0]
 	var newBtn = document.createElement("button");
 	newBtn.innerText = "Auto-pick";
+	newBtn.onclick = "autoPick";
 	submitBtn.parentElement.insertBefore(newBtn, submitBtn.previousElementSibling);
 })();
