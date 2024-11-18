@@ -541,7 +541,7 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 
 					//handle repetitive prefixes/suffixes
 					if(gameNum==2584) { //Bloons 6
-						newLink.innerText = newLink.innerText.replaceAll(" Rounds","");
+						newLink.innerText = newLink.innerText.replaceAll("Round ","");
 					}
 
 					newLink.style.color = linkColor;
