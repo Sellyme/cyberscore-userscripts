@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.1.6
+// @version		1.1.7
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -145,12 +145,29 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 			]
 			break;
 		case 2584: //Bloons 6
-			groups = [{
-				tables: tables,
-				groupStart: 0,
-				groupEnd: 13,
-				tableID: 1,
-			}]
+			groups = [
+				{
+					tables: tables,
+					groupStart: 0,
+					groupEnd: 14,
+					tableID: 1,
+					tableName: "Solo Highest Round",
+				},
+				{
+					tables: tables,
+					groupStart: 14,
+					groupEnd: 28,
+					tableID: 2,
+					tableName: "Solo Least Cash",
+				},
+				{
+					tables: tables,
+					groupStart: 34,
+					groupEnd: 48,
+					tableID: 3,
+					tableName: "Co-Op Highest Round",
+				},
+			]
 			break;
 		case 2785: //Pokémon Snap 2
 			tables = document.getElementsByClassName('standard all');
@@ -378,7 +395,14 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 					groupName = groupName.replace(" (Joy-Con)","").replace(" (Touch)","");
 				}
 			} else if (gameNum==2584) {
-				groupName = groupName.replace("Highest Round – ","");
+				groupName = groupName.replace("Highest Round Reached – ","");
+				groupName = groupName.replace("Least Cash – ","");
+				groupName = groupName.replace("[4P] ","")
+				groupName = groupName.replace("Easy","EZ");
+				groupName = groupName.replace("Medium","MD");
+				groupName = groupName.replace("Hard","HD");
+				groupName = groupName.replace(" – Solo",""); //Solo/Co-op designation covered by table name
+				groupName = groupName.replace(" – Co-Op","");
 			} else if(gameNum==2911) { //HyperRogue
 				groupName = groupName.replace("Treasure Collected by Land (","").replace(")","");
 			} else if (gameNum==3089) { //Dustforce
