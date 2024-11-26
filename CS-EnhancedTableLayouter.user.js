@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.1.7a
+// @version		1.1.8
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -16,6 +16,7 @@
 // @match		https://cyberscore.me.uk/game*/2584
 // @match		https://cyberscore.me.uk/game*/2785
 // @match		https://cyberscore.me.uk/game*/2802
+// @match		https://cyberscore.me.uk/game*/2874
 // @match		https://cyberscore.me.uk/game*/2880
 // @match		https://cyberscore.me.uk/game*/2902
 // @match		https://cyberscore.me.uk/game*/2911
@@ -203,6 +204,14 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 					tableName: "Song Packs",
 				},
 			]
+			break;
+		case 2874: //Pokémon Legends: Arceus
+			groups = [{
+				tables: tables,
+				groupStart: 2,
+				groupEnd: 12, //we have a hardcoded skip for the incrementals in the for loop
+				tableID: 1,
+			}]
 			break;
 		case 2880: //Mario Kart Tour
 			groups = [{
@@ -411,6 +420,11 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				groupName = groupName.replace("Hard","HD");
 				groupName = groupName.replace(" – Solo",""); //Solo/Co-op designation covered by table name
 				groupName = groupName.replace(" – Co-Op","");
+			} else if(gameNum==2874) { //Pokémon Legends Arceus
+				if (i > 5 && i <= 10) {
+					//skip the research task incrementals
+					continue;
+				}
 			} else if(gameNum==2911) { //HyperRogue
 				groupName = groupName.replace("Treasure Collected by Land (","").replace(")","");
 			} else if (gameNum==3089) { //Dustforce
