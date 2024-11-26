@@ -180,7 +180,6 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 			}]
 			break;
 		case 2802: //Arcaea (Switch)
-			tables = tables;
 			groups = [
 				{
 					tables: tables,
