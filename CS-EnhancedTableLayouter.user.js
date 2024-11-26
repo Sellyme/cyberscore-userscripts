@@ -16,6 +16,7 @@
 // @match		https://cyberscore.me.uk/game*/2584
 // @match		https://cyberscore.me.uk/game*/2785
 // @match		https://cyberscore.me.uk/game*/2802
+// @match		https://cyberscore.me.uk/game*/2880
 // @match		https://cyberscore.me.uk/game*/2902
 // @match		https://cyberscore.me.uk/game*/2911
 // @match		https://cyberscore.me.uk/game*/2985
@@ -203,6 +204,14 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 					tableName: "Song Packs",
 				},
 			]
+			break;
+		case 2880: //Mario Kart Tour
+			groups = [{
+				tables: tables,
+				groupStart: 1,
+				groupEnd: 5,
+				tableID: 1,
+			}]
 			break;
 		case 2902: //Pokémon Let's Go: Pikachu/Eevee
 			groups = [
@@ -505,6 +514,21 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 						//but that means we also have to increment the chart counter in the Beyond group to move on from them
 						c++;
 					}
+				}
+				//special handling for Mario Kart Tour
+				if(gameNum==2880) {
+					//charts in the R/T groups include that designation in their chart name
+					//since this breaks matching, we just strip it
+					//unfortunately this is comically inconsistent, so we need multiple passes
+
+					//get rid of designations ending in "R", "T" or "R/T"
+					//these may or may not be preceded by a space, so check for and strip that too
+					chartName = chartName.replace(/ ?[RT](\/T)?$/, "")
+					//also get rid of any "R", "T", or "R/T" surrounded by spaces mid-name
+					//(we leave in one space to keep the first and second halfs of the chart name being merged)
+					chartName = chartName.replace(" R ", " ")
+					chartName = chartName.replace(" T ", " ")
+					chartName = chartName.replace(" R/T ", " ")
 				}
 
 				if(i == groupStart){
