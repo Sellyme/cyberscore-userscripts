@@ -121,9 +121,16 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				},
 				{
 					tables: tables,
-					groupStart: 15,
-					groupEnd: 19,
+					groupStart: 13,
+					groupEnd: 16,
 					tableID: 3,
+					tableName: "Gigantamax Pokédex",
+				},
+				{
+					tables: tables,
+					groupStart: 18,
+					groupEnd: 22,
+					tableID: 4,
 					tableName: "Sizes",
 				},
 			]
