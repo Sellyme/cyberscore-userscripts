@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.1.9
+// @version		1.1.9a
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -509,7 +509,7 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 					//we don't care about including the multiplayer designation at all in the table layout
 					chartName = chartName.substring(5).trim();
 				}
-				if(chartName.substring(0,5) == "[DLC]" && (gameNum != 2573)) { //only add DLC tags for games where DLC and basegame are mixed, separate DLC-specific tables don't need it
+				if(chartName.substring(0,5) == "[DLC]") {
 					chartName = "[DLC] " + chartName.substring(5).trim();
 				}
 				//and Final Bar Line charts say "Final Fantasy" way too much
@@ -555,6 +555,11 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 						//but that means we also have to increment the chart counter in the Beyond group to move on from them
 						c++;
 					}
+				}
+				//special handling for Groove Coaster (PC)
+				if(gameNum == 2573) {
+					//DLC charts are in their own DLC table, so we don't need the prefix indicator
+					chartName = chartName.replace("[DLC] ","");
 				}
 				//special handling for Mario Kart Tour
 				if(gameNum==2880) {
