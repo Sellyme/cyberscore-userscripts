@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.1.8a
+// @version		1.1.9
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -13,6 +13,7 @@
 // @match		https://cyberscore.me.uk/game*/2125
 // @match		https://cyberscore.me.uk/game*/1907
 // @match		https://cyberscore.me.uk/game*/2363
+// @match		https://cyberscore.me.uk/game*/2573
 // @match		https://cyberscore.me.uk/game*/2584
 // @match		https://cyberscore.me.uk/game*/2785
 // @match		https://cyberscore.me.uk/game*/2802
@@ -150,6 +151,24 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 					groupEnd: 11,
 					tableID: 2,
 					tableName: "Song Packs",
+				}
+			]
+			break;
+		case 2573: //Groove Coaster (PC)
+			groups = [
+				{
+					tables: tables,
+					groupStart: 0,
+					groupEnd: 4,
+					tableID: 1,
+					tableName: "Base Game"
+				},
+				{
+					tables: tables,
+					groupStart: 4,
+					groupEnd: tables.length,
+					tableID: 2,
+					tableName: "DLC"
 				}
 			]
 			break;
@@ -418,6 +437,8 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 				if (groups[t].tableID != 3 && gameNum==2802) {
 					groupName = groupName.replace(" (Joy-Con)","").replace(" (Touch)","");
 				}
+			} else if (gameNum==2573) {
+				groupName = groupName.replace("[DLC] ","")
 			} else if (gameNum==2584) {
 				groupName = groupName.replace("Highest Round Reached – ","");
 				groupName = groupName.replace("Least Cash – ","");
@@ -488,7 +509,7 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 					//we don't care about including the multiplayer designation at all in the table layout
 					chartName = chartName.substring(5).trim();
 				}
-				if(chartName.substring(0,5) == "[DLC]") {
+				if(chartName.substring(0,5) == "[DLC]" && (gameNum != 2573)) { //only add DLC tags for games where DLC and basegame are mixed, separate DLC-specific tables don't need it
 					chartName = "[DLC] " + chartName.substring(5).trim();
 				}
 				//and Final Bar Line charts say "Final Fantasy" way too much
