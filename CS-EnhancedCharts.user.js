@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name		CS-Enhanced Charts
-// @version		0.4.3
+// @version		0.5
 // @description	Add various extended functionality to Cyberscore chart pages
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/chart/*
 // @match		https://cyberscore.me.uk/charts/*
+// @history		0.5 - fix to work with new chart header slugs
 // @namespace	https://github.com/Sellyme/cyberscore-userscripts/
 // @homepageURL	https://github.com/Sellyme/cyberscore-userscripts/
 // @downloadURL	https://github.com/Sellyme/cyberscore-userscripts/raw/main/CS-EnhancedCharts.user.js
@@ -35,7 +36,7 @@
 		//first problem - we need to jam all of this crap into the header
 		//to do this we allow the header flexbox to wrap, and add in a 0-height 100% width div to force a wrap
 		//once we do that we have a shiny new line to print our buttons on
-		var insertPoint = document.getElementsByClassName('charts-show-title-header')[0];
+		var insertPoint = document.getElementsByClassName('title-header')[0];
 		insertPoint.style.flexWrap = "wrap";
 		var flexBreak = document.createElement('div')
 		flexBreak.classList.add("flexBreak");
