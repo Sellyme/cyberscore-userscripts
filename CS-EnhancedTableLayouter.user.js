@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		CS-EnhancedTableLayouter
-// @version		1.1.9a
+// @version		1.1.9b
 // @description	Allow two dimensional score tables in Cyberscore games. Based on Kyu's CS-TableLayouter for Pokemon Snap
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/118
@@ -108,29 +108,29 @@ We use hardcoded IDs instead of just index within the page so that the addition 
 			groups = [
 				{
 					tables: tables,
-					groupStart: 3,
-					groupEnd: 8,
+					groupStart: 4,
+					groupEnd: 9,
 					tableID: 1,
 					tableName: "Pokédex",
 				},
 				{
 					tables: tables,
-					groupStart: 8,
-					groupEnd: 11,
+					groupStart: 9,
+					groupEnd: 12,
 					tableID: 2,
 					tableName: "Mega Pokédex",
 				},
 				{
 					tables: tables,
-					groupStart: 11,
-					groupEnd: 14,
+					groupStart: 12,
+					groupEnd: 15,
 					tableID: 3,
 					tableName: "Gigantamax Pokédex",
 				},
 				{
 					tables: tables,
-					groupStart: 15,
-					groupEnd: 19,
+					groupStart: 16,
+					groupEnd: 20,
 					tableID: 4,
 					tableName: "Sizes",
 				},
