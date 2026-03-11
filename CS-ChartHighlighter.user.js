@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name		CS-ChartHighlighter
-// @version		0.2.4
+// @version		0.2.5
 // @description	Highlights charts for certain games based on user-submitted heuristics (e.g., "ticking off" charts a user has maxed).
+// @changelog	0.2.5 - fix incompatibility with new page breadcrumbs that broke script
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/*
 // @exclude		https://cyberscore.me.uk/game-*
@@ -144,8 +145,8 @@ GM_addStyle(
 	hDiv.appendChild(selectEl);
 
 	//insert the selector
-	var breadCrumbDiv = document.getElementById("breadcrumb");
-	breadCrumbDiv.appendChild(hDiv);
+	var breadCrumbDiv = document.getElementsByClassName("breadcrumbs")[0];
+	breadCrumbDiv.parentElement.appendChild(hDiv);
 
 	//build the DLC Selector
 	var dlcBtn = document.createElement('button');
