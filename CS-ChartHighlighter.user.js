@@ -93,6 +93,7 @@ GM_addStyle(
 		{"value": "none", "desc": "None"},
 		{"value": "first", "desc": "Firsts"},
 		{"value": "submitted", "desc": "Submitted"},
+		{"value": "proven", "desc": "Proven"},
 	]
 
 	function toggleDLC() {
@@ -214,8 +215,8 @@ GM_addStyle(
 	//this set of functions is called on any chart row if the user has a valid score on that chart
 	//the exact behaviour of how to tag it varies by game
 	//they receive the group name and chart row as arguments
-	function tagDJMAX(gname,crow,userScore,firstScore) {
-		tagGeneric(gname,crow,userScore,firstScore);
+	function tagDJMAX(gname,crow,userScore,firstScore,proof_status) {
+		tagGeneric(gname,crow,userScore,firstScore,proof_status);
 		if(gname.includes("Best Rate")) {
 			let target = "100%";
 			if(userScore == target) {
@@ -223,8 +224,8 @@ GM_addStyle(
 			}
 		}
 	}
-	function tagRuneScape(gname,crow,userScore,firstScore) {
-		tagGeneric(gname,crow,userScore,firstScore);
+	function tagRuneScape(gname,crow,userScore,firstScore,proof_status) {
+		tagGeneric(gname,crow,userScore,firstScore,proof_status);
 		if(gname.includes("Skill experience")) {
 			let target = 13034431;
 			let target2 = 200000000
@@ -237,8 +238,8 @@ GM_addStyle(
 			}
 		}
 	}
-	function tagMelvor(gname,crow,userScore,firstScore) {
-		tagGeneric(gname,crow,userScore,firstScore);
+	function tagMelvor(gname,crow,userScore,firstScore,proof_status) {
+		tagGeneric(gname,crow,userScore,firstScore,proof_status);
 		if(gname.includes(" XP")) {
 			let target = 13034431; //Level 99 Mastery
 			if(gname.includes("Skill")) {
@@ -250,8 +251,8 @@ GM_addStyle(
 			}
 		}
 	}
-	function tagTheatrhythm(gname,crow,userScore,firstScore,gameNum) {
-		tagGeneric(gname,crow,userScore,firstScore);
+	function tagTheatrhythm(gname,crow,userScore,firstScore,proof_status,gameNum) {
+		tagGeneric(gname,crow,userScore,firstScore,proof_status);
 		if(
 			((gameNum == 3231 || gameNum == 1121 || gameNum == 2779) && gname.includes("High Score")) || //Final Bar Line + Theatrhythm Final Fantasy + KH: Melody of Memory
 			gameNum == 2893 || gameNum == 1509 //Dragon Quest + Curtain Call + KH: Melody of Memory
@@ -266,8 +267,8 @@ GM_addStyle(
 			}
 		}
 	}
-	function tagPokeclicker(gname,crow,userScore,firstScore) {
-		tagGeneric(gname,crow,userScore,firstScore);
+	function tagPokeclicker(gname,crow,userScore,firstScore,proof_status) {
+		tagGeneric(gname,crow,userScore,firstScore,proof_status);
 		let target = false;
 		if(gname.includes("EVs")) {
 			target = 50;
@@ -285,10 +286,13 @@ GM_addStyle(
 			}
 		}
 	}
-	function tagGeneric(gname,crow,userScore,firstScore) {
+	function tagGeneric(gname,crow,userScore,firstScore,proof_status) {
 		crow.classList.add('submitted');
 		if(userScore == firstScore) {
 			crow.classList.add('first');
+		}
+		if(proof_status == true) {
+			crow.classList.add('proven');
 		}
 	}
 
@@ -310,7 +314,17 @@ GM_addStyle(
 		//iterate over all row children of the table
 		for(var r = 1; r < table.children.length; r++) {
 			let crow = table.children[r];
+			let iconCell = crow.children[5];
 			let scoreCell = crow.children[2];
+
+			//the only way for the icon cell to have exactly 2 images is if it's approved or pending approval
+			//and there is no way for an approved or pending approval submission to have more or less than 2 images
+			const images = iconCell.querySelectorAll('img');
+			let proof_status = false;
+ 			if (images.length == 2) {
+				proof_status = true;
+			}
+			
 			let scores = scoreCell.innerText.split(" /");
 			let userScore = scores[0].trim().replaceAll(",","");
 			//if there's a "/" character in the chart suffix or it's a dual-sub chart, the primary submission will be the penultimate in the array
@@ -329,7 +343,7 @@ GM_addStyle(
 			//check for missing scores
 			if(userScore != "-") {
 				//users has submitted a score, so add submitted class
-				tagFunction(gname, crow, userScore, firstScore, gameNum); //gameNum only parsed by multi-purpose functions
+				tagFunction(gname, crow, userScore, firstScore, proof_status, gameNum); //gameNum only parsed by multi-purpose functions
 			}
 		}
 	}
