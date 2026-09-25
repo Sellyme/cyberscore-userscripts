@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name		CS-ChartHighlighter
-// @version		0.2.5
+// @version		0.3
 // @description	Highlights charts for certain games based on user-submitted heuristics (e.g., "ticking off" charts a user has maxed).
+// @changelog	0.3 - add proof status highlighting
 // @changelog	0.2.5 - fix incompatibility with new page breadcrumbs that broke script
 // @author		Sellyme
 // @match		https://cyberscore.me.uk/game*/*
