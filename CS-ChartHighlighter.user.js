@@ -320,8 +320,9 @@ GM_addStyle(
 			//the only way for the icon cell to have exactly 2 images is if it's approved or pending approval
 			//and there is no way for an approved or pending approval submission to have more or less than 2 images
 			const images = iconCell.querySelectorAll('img');
+			let proof_status = false;
  			if (images.length == 2) {
-				let proof_status = true;
+				proof_status = true;
 			}
 			
 			let scores = scoreCell.innerText.split(" /");
